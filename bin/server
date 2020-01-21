@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+puts(__FILE__)
+
+require 'socket'
+
+require_relative '../lib/reactor'
+require_relative '../lib/handlers/accept'
+
+trap('INT') do
+  puts 'Shutting down...'
+  exit
+end
+
+tcp_server = TCPServer.new(ENV.fetch('HOST'), ENV.fetch('PORT'))
+
+Reactor.register(
+  io: tcp_server,
+  mode: :read,
+  handler: :accept
+)
+
+$stdout.flush
+Reactor.start

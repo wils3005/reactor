@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+echo "${BASH_SOURCE[0]}"
+
+git fetch
+git reset --hard origin/master
+systemctl restart reactor.service
+journalctl --lines 36 --unit reactor.service
