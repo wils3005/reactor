@@ -5,21 +5,20 @@ puts(__FILE__)
 
 require 'socket'
 
-require_relative '../lib/reactor'
-require_relative '../lib/handlers/accept'
+require_relative '../lib/io'
 
 trap('INT') do
   puts 'Shutting down...'
   exit
 end
 
-tcp_server = TCPServer.new(ENV.fetch('HOST'), ENV.fetch('PORT'))
-
-Reactor.register(
-  io: tcp_server,
-  mode: :read,
-  handler: :accept
+tcp_server = TCPServer.new(
+  ENV.fetch('HOST'),
+  ENV.fetch('PORT')
 )
 
+tcp_server.register(:read, :accept)
+
 $stdout.flush
-Reactor.start
+puts "Listening on port #{ENV.fetch('PORT')}!"
+IO.reactor
