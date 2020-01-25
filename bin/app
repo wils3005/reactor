@@ -1,7 +1,18 @@
-#!/usr/bin/env bash
+#!/usr/bin/env ruby
+# frozen_string_literal: true
 
-echo "${BASH_SOURCE[0]}"
+puts __FILE__
 
-env $(xargs < .env) ruby \
--r ./lib/app.rb \
--e "App.new"
+dotenv =
+  File.
+  read('.env').
+  split("\n").
+  reject { _1 =~ /^\s*#/ }.
+  map { _1.split('=') }.
+  to_h
+
+ENV.merge!(dotenv)
+
+require_relative '../lib/service'
+
+Service.new

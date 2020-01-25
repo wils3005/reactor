@@ -4,5 +4,11 @@ echo "${BASH_SOURCE[0]}"
 
 git fetch
 git reset --hard origin/master
+
+rm -v /etc/systemd/system/reactor.service
+cp -v reactor.service /etc/systemd/system/
+chown -R reactor:reactor /home/reactor/
+systemctl daemon-reload
 systemctl restart reactor.service
-journalctl --lines 36 --unit reactor.service
+
+journalctl --lines 24 --unit reactor.service
