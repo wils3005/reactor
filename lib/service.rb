@@ -2,15 +2,8 @@
 
 puts __FILE__
 
-# require 'fiber'
 require 'socket'
-
-require_relative 'io'
-require_relative 'tcp_server'
-require_relative 'tcp_socket'
-
 require_relative 'reactor'
-require_relative 'response'
 
 class Service
   def initialize
