@@ -16,6 +16,9 @@ class TCPSocket
       write_nonblock(Response.new(request))
       close
       # Reactor::WRITE.delete(self)
+    rescue IOError => e
+      Reactor::READ.delete(self)
+      puts(e.inspect)
     end
   end
 end
