@@ -4,9 +4,12 @@ puts __FILE__
 
 require 'socket'
 
-require_relative 'io'
+require_relative 'reactor'
 require_relative 'response'
 require_relative 'server'
+require_relative 'reactor/accept'
+require_relative 'reactor/request'
+require_relative 'reactor/response'
 
 class Service
   def initialize

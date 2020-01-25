@@ -2,8 +2,6 @@
 
 puts __FILE__
 
-# require 'erb'
-
 class Response
   HTTP_METHODS = %w[
     CONNECT
@@ -23,24 +21,7 @@ class Response
     "Date: %<date>s\r\n" \
     "%<content>s"
 
-  # INDEX = ERB.new(File.read('index.html.erb'))
-  INDEX = <<~HEREDOC
-    <!doctype html>
-    <html lang="en">
-
-    <head>
-      <meta charset="utf-8">
-      <title>Reactor</title>
-      <meta name="description" content="">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-    </head>
-
-    <body>
-      <p>%<time>s</p>
-    </body>
-
-    </html>
-  HEREDOC
+  INDEX = File.read('index.html')
 
   CONTENT =
     "Content-Type: text/html; charset=utf-8\r\n" \
@@ -49,11 +30,10 @@ class Response
     "%<content>s"
 
   def initialize(request)
-    @request = request
-    @headers, @content = @request.split("\r\n\r\n")
-    @headers = @headers.split("\r\n")
-    @method, @path, @version = @headers.shift.split
-    @headers = @headers.map { _1.split(': ') }.to_h
+    headers, @content = request.split("\r\n\r\n")
+    headers = headers.split("\r\n")
+    @method, @path, @version = headers.shift.split
+    headers = headers.map { _1.split(': ') }.to_h
     @content = "\r\n"
     @date = Time.now.utc.strftime('%a, %d %b %Y %H:%M:%S GMT')
     @status_code, @reason_phrase = status_code_with_reason_phrase
