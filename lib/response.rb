@@ -2,10 +2,8 @@
 
 puts __FILE__
 
-# if responding with a body, add content-type and content-length headers
-# "Content-Type: text/html; charset=utf-8\r\n" \
-# "Content-Length: %<content_length>s\r\n" \
-# "%<body>s"
+require 'erb'
+
 class Response
   HTTP_METHODS = %w[
     CONNECT
@@ -23,16 +21,25 @@ class Response
     "HTTP/1.1 %<status_code>s %<reason_phrase>s\r\n" \
     "Connection: close\r\n" \
     "Date: %<date>s\r\n" \
-    "\r\n"
+    "%<content>s"
+
+  INDEX = ERB.new(File.read('index.html.erb'))
+
+  CONTENT =
+    "Content-Type: text/html; charset=utf-8\r\n" \
+    "Content-Length: %<content_length>s\r\n" \
+    "\r\n" \
+    "%<content>s"
 
   def initialize(request)
     @request = request
-    @headers, @body = @request.split("\r\n\r\n")
+    @headers, @content = @request.split("\r\n\r\n")
     @headers = @headers.split("\r\n")
     @method, @path, @version = @headers.shift.split
     @headers = @headers.map { _1.split(': ') }.to_h
-    @status_code, @reason_phrase = status_code_with_reason_phrase
+    @content = "\r\n"
     @date = Time.now.utc.strftime('%a, %d %b %Y %H:%M:%S GMT')
+    @status_code, @reason_phrase = status_code_with_reason_phrase
   end
 
   def to_s
@@ -40,7 +47,8 @@ class Response
       RESPONSE,
       status_code: @status_code,
       reason_phrase: @reason_phrase,
-      date: @date
+      date: @date,
+      content: @content
     )
   end
 
@@ -52,7 +60,10 @@ class Response
     when version_not_supported? then [505, 'HTTP Version Not Supported']
     when method_not_allowed? then [405, 'Method Not Allowed']
     when not_found? then [404, 'Not Found']
-    else [204, 'No Content']
+    else
+      result = INDEX.result
+      @content = format(CONTENT, content_length: result.length, content: result)
+      [200, 'OK']
     end
   rescue
     [500, 'Internal Server Error']
@@ -76,12 +87,9 @@ class Response
 
   # https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
   # https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-  # 200/OK
   # 201/Created
   # 202/Accepted -- async operation?
   # 401/Unauthorized
   # 403/Forbidden
-  # 404/Not Found
-  # 405/Method Not Allowed
   # 408/Request Timeout
 end
