@@ -2,7 +2,7 @@
 
 puts __FILE__
 
-require 'erb'
+# require 'erb'
 
 class Response
   HTTP_METHODS = %w[
@@ -23,7 +23,24 @@ class Response
     "Date: %<date>s\r\n" \
     "%<content>s"
 
-  INDEX = ERB.new(File.read('index.html.erb'))
+  # INDEX = ERB.new(File.read('index.html.erb'))
+  INDEX = <<~HEREDOC
+    <!doctype html>
+    <html lang="en">
+
+    <head>
+      <meta charset="utf-8">
+      <title>Reactor</title>
+      <meta name="description" content="">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+
+    <body>
+      <p>%<time>s</p>
+    </body>
+
+    </html>
+  HEREDOC
 
   CONTENT =
     "Content-Type: text/html; charset=utf-8\r\n" \
@@ -61,8 +78,8 @@ class Response
     when method_not_allowed? then [405, 'Method Not Allowed']
     when not_found? then [404, 'Not Found']
     else
-      result = INDEX.result
-      @content = format(CONTENT, content_length: result.length, content: result)
+      index = format(INDEX, time: Time.now.utc)
+      @content = format(CONTENT, content_length: index.length, content: index)
       [200, 'OK']
     end
   rescue
