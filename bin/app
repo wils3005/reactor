@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+echo "${BASH_SOURCE[0]}"
+
+env $(xargs < .env) ruby \
+-r ./lib/app.rb \
+-e "App.new"

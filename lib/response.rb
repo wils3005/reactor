@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+puts __FILE__
+
 # if responding with a body, add content-type and content-length headers
 # "Content-Type: text/html; charset=utf-8\r\n" \
 # "Content-Length: %<content_length>s\r\n" \
