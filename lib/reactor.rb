@@ -8,6 +8,6 @@ module Reactor
   ERROR = []
 
   def self.call
-    loop { IO.select(READ, WRITE, ERROR).flatten.each(&:resume) }
+    loop { IO.select(READ, WRITE, ERROR).flatten.each(&:call) }
   end
 end
