@@ -5,9 +5,9 @@ puts __FILE__
 module Reactor
   MAXLEN = 16_384
 
-  READ = [].freeze
-  WRITE = [].freeze
-  ERROR = [].freeze
+  READ = []
+  WRITE = []
+  ERROR = []
 
   ReactorRegistrationError = Class.new(IOError)
   ReactorCallbackError = Class.new(IOError)
