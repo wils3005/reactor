@@ -21,13 +21,13 @@ class Response
     "Date: %<date>s\r\n" \
     "%<content>s"
 
-  INDEX = File.read('index.html')
-
   CONTENT =
     "Content-Type: text/html; charset=utf-8\r\n" \
     "Content-Length: %<content_length>s\r\n" \
     "\r\n" \
     "%<content>s"
+
+  INDEX = File.read('index.html')
 
   def initialize(request)
     headers, @content = request.split("\r\n\r\n")
@@ -55,7 +55,6 @@ class Response
     case
     when bad_request? then [400, 'Bad Request']
     when version_not_supported? then [505, 'HTTP Version Not Supported']
-    when method_not_allowed? then [405, 'Method Not Allowed']
     when not_found? then [404, 'Not Found']
     else
       index = format(INDEX, time: Time.now.utc)
@@ -72,10 +71,6 @@ class Response
 
   def version_not_supported?
     @version != 'HTTP/1.1'
-  end
-
-  def method_not_allowed?
-    @method != 'GET'
   end
 
   def not_found?

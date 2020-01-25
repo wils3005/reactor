@@ -2,14 +2,15 @@
 
 puts __FILE__
 
+require 'fiber'
 require 'socket'
+
+require_relative 'io'
+require_relative 'tcp_server'
+require_relative 'tcp_socket'
 
 require_relative 'reactor'
 require_relative 'response'
-require_relative 'server'
-require_relative 'reactor/accept'
-require_relative 'reactor/request'
-require_relative 'reactor/response'
 
 class Service
   def initialize
@@ -18,8 +19,9 @@ class Service
       exit
     end
 
-    Server.new
+    TCPServer.new(ENV.fetch('HOST'), ENV.fetch('PORT')).resume
+    puts "Listening at http://#{ENV.fetch('HOST')}:#{ENV.fetch('PORT')}!"
     STDOUT.flush
-    IO.reactor
+    Reactor.call
   end
 end
