@@ -34,6 +34,7 @@ module Reactor
   ::TCPServer.include(TCPServer)
 
   def self.call
+    trap('INT') { return }
     loop { IO.select(READ, WRITE, ERROR).flatten.each(&:call) }
   end
 end
