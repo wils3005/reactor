@@ -9,16 +9,15 @@ class TCPSocket
     @fiber ||= Fiber.new do
       Reactor::READ << self
       Fiber.yield
-      request = read_nonblock(MAXLEN)
-      Reactor::READ.delete(self)
-      # Reactor::WRITE << self
-      # Fiber.yield
-      write_nonblock(Response.new(request))
+      # request = read_nonblock(MAXLEN)
+      # Reactor::READ.delete(self)
+      # write_nonblock(Response.new(request))
+      write_nonblock(Response.new(read_nonblock(MAXLEN)))
       close
-      # Reactor::WRITE.delete(self)
     rescue IOError => e
-      Reactor::READ.delete(self)
       puts(e.inspect)
+    ensure
+      Reactor::READ.delete(self)
     end
   end
 end
