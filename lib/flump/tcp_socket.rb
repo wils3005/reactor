@@ -4,7 +4,7 @@ module Flump
   module TCPSocket
     MAXLEN = 16_384
 
-    def _reactor_callback
+    def flump
       write_nonblock(Response.new(read_nonblock(MAXLEN)))
       close
     rescue IOError => e

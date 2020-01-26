@@ -4,7 +4,7 @@ module Flump
   module IO
     NoCallbackError = Class.new(IOError)
 
-    def _reactor_callback
+    def flump
       raise(NoCallbackError, inspect)
     end
   end

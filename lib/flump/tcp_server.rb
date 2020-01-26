@@ -2,7 +2,7 @@
 
 module Flump
   module TCPServer
-    def _reactor_callback
+    def flump
       Reactor::READ << accept_nonblock
     end
   end
