@@ -10,10 +10,20 @@ module Reactor
   WRITE = []
   ERROR = []
 
+  NoCallbackError = Class.new(IOError)
+
+  module IO
+    def _reactor_callback
+      raise(NoCallbackError, inspect)
+    end
+  end
+
+  ::IO.include(IO)
+
   module TCPSocket
     MAXLEN = 16_384
 
-    def call
+    def _reactor_callback
       write_nonblock(Response.new(read_nonblock(MAXLEN)))
       close
     rescue IOError => e
@@ -26,7 +36,7 @@ module Reactor
   ::TCPSocket.include(TCPSocket)
 
   module TCPServer
-    def call
+    def _reactor_callback
       Reactor::READ << accept_nonblock
     end
   end
@@ -35,6 +45,6 @@ module Reactor
 
   def self.call
     trap('INT') { return }
-    loop { IO.select(READ, WRITE, ERROR).flatten.each(&:call) }
+    loop { IO.select(READ, WRITE, ERROR).flatten.each(&:_reactor_callback) }
   end
 end
