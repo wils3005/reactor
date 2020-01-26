@@ -45,6 +45,6 @@ module Reactor
 
   def self.call
     trap('INT') { return }
-    loop { IO.select(READ, WRITE, ERROR).flatten.each(&:_reactor_callback) }
+    loop { ::IO.select(READ, WRITE, ERROR).flatten.each(&:_reactor_callback) }
   end
 end
