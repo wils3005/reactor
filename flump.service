@@ -8,7 +8,7 @@ WorkingDirectory=/home/flump/
 Type=simple
 User=flump
 Group=flump
-ExecStart=/opt/rubies/ruby-2.7.0/bin/ruby -r /home/flump/lib/service.rb -e "Service.new"
+ExecStart=/opt/rubies/ruby-2.7.0/bin/ruby -r /home/flump/lib/flump.rb -e "Flump.call"
 SyslogIdentifier=flump
 
 [Install]

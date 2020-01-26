@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-puts __FILE__
-
 dotenv =
   File.
   read('.env').
@@ -13,6 +11,6 @@ dotenv =
 
 ENV.merge!(dotenv)
 
-require_relative '../lib/service'
+require_relative '../lib/flump'
 
-Service.new
+Flump.call
