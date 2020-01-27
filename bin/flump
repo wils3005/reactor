@@ -1,16 +1,4 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-dotenv =
-  File.
-  read('.env').
-  split("\n").
-  reject { _1 =~ /^\s*#/ }.
-  map { _1.split('=') }.
-  to_h
-
-ENV.merge!(dotenv)
-
-require_relative '../lib/flump'
-
-Flump.call
+require './lib/flump'

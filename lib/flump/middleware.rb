@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Flump
-  class Response
+  class Middleware
     HTTP_METHODS = %w[
       CONNECT
       DELETE
@@ -25,8 +25,6 @@ module Flump
       "Content-Length: %<content_length>s\r\n" \
       "\r\n" \
       "%<content>s"
-
-    INDEX = File.read('index.html')
 
     def initialize(request)
       headers, @content = request.split("\r\n\r\n")
@@ -56,8 +54,9 @@ module Flump
       when version_not_supported? then [505, 'HTTP Version Not Supported']
       when not_found? then [404, 'Not Found']
       else
-        index = format(INDEX, time: Time.now.utc)
-        @content = format(CONTENT, content_length: index.length, content: index)
+        # index = format(INDEX, time: Time.now.utc)
+        # @content = format(CONTENT, content_length: index.length, content: index)
+        @content = ''
         [200, 'OK']
       end
     rescue

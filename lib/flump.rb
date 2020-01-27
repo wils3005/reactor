@@ -3,7 +3,7 @@
 require 'socket'
 require_relative 'flump/io'
 require_relative 'flump/reactor'
-require_relative 'flump/response'
+require_relative 'flump/middleware'
 require_relative 'flump/tcp_server'
 require_relative 'flump/tcp_socket'
 
