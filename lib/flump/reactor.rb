@@ -6,7 +6,7 @@ module Flump
     WRITE = []
     ERROR = []
 
-    def self.call
+    def reactor
       trap('INT') { return }
       loop { ::IO.select(READ, WRITE, ERROR).flatten.each(&:flump) }
     end

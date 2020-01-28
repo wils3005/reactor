@@ -1,0 +1,15 @@
+[Unit]
+Description=flump
+Requires=network.target
+
+[Service]
+EnvironmentFile=/home/flump/.env
+WorkingDirectory=/home/flump/
+Type=simple
+User=flump
+Group=flump
+ExecStart=/opt/rubies/ruby-2.7.0/bin/ruby -r /home/flump/lib/flump.rb -e "Flump.call"
+SyslogIdentifier=flump
+
+[Install]
+WantedBy=multi-user.target

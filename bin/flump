@@ -1,4 +1,27 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require './lib/flump'
+require_relative '../lib/flump'
+
+env =
+  File
+  .read('.env')
+  .split("\n")
+  .reject { |str| str =~ /^\s*#/ }
+  .map { |str| str.split('=') }
+  .to_h
+
+ENV.merge!(env)
+
+env_sample_keys =
+  File
+  .read('.env.sample')
+  .split("\n")
+  .map { |str| str[/^\w+/] }
+
+missing_keys = (env_sample_keys - ENV.keys)
+
+msg = "ENV values not set: #{missing_keys}"
+abort(msg) unless missing_keys.empty?
+
+Flump.call
