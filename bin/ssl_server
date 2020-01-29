@@ -42,5 +42,5 @@ trap('INT') do
   exit
 end
 
-$stdout.flush
+$STDERR.flush
 sleep

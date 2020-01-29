@@ -2,10 +2,10 @@
 
 module Flump
   module IO
-    NoHandlerError = Class.new(IOError)
+    NoCallbackError = Class.new(IOError)
 
     def flump
-      raise(NoHandlerError, inspect)
+      raise(NoCallbackError, inspect)
     end
   end
 end

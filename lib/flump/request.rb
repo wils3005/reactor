@@ -2,7 +2,7 @@
 
 module Flump
   module Request
-    METHODS = %w[
+    HTTP_METHODS = %w[
       CONNECT
       DELETE
       GET
@@ -14,31 +14,38 @@ module Flump
       TRACE
     ].freeze
 
-    MAX_PAYLOAD_SIZE = 4_096
+    HTTP_VERSION = 'HTTP/1.1'
+    NOT_IMPLEMENTED = %w[CONNECT OPTIONS TRACE].freeze
+    MAX_PAYLOAD_SIZE = 16_384
 
+    private
+
+    # @headers, @body, @request, @request_line, @method, @path, @version
     def deserialize_request!
       return if defined? @headers
 
       @headers, @body = @request.split("\r\n\r\n")
       @headers = @headers.split("\r\n")
-      @method, @path, @version = @headers.shift.split
+      @request_line = @headers.shift.split
+      @method, @path, @version = @request_line
       @headers = @headers.map { _1.split(': ') }.to_h
-    end
-
-    def bad_request?
-      [@method, @path, @version].any?(&:nil?) || !METHODS.include?(@method)
-    end
-
-    def version_not_supported?
-      @version != 'HTTP/1.1'
-    end
-
-    def not_implemented?
-      %w[CONNECT OPTIONS TRACE].include?(@method)
+      nil
     end
 
     def payload_too_large?
       @request.size > MAX_PAYLOAD_SIZE
+    end
+
+    def bad_request?
+      @request_line.any?(&:nil?) || !HTTP_METHODS.include?(@method)
+    end
+
+    def version_not_supported?
+      @version != HTTP_VERSION
+    end
+
+    def not_implemented?
+      NOT_IMPLEMENTED.include?(@method)
     end
   end
 end

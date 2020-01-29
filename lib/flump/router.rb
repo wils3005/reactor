@@ -2,16 +2,25 @@
 
 module Flump
   module Router
-    class << self
-      def call(method, path)
-        routes[method].find { |route, handler| path =~ route } || :not_found
-      end
+    @routes = Hash.new({}).merge!(
+      'DELETE' => {},
+      'GET' => {},
+      'HEAD' => {},
+      'PATCH' => {},
+      'POST' => {},
+      'PUT' => {},
+    )
 
-      private
+    def self.call(method, path)
+      @routes[method].
+        find { |route, handler| path =~ route }.
+        to_a.
+        last&.
+        call
+    end
 
-      def routes
-        @routes ||= Hash.new({})
-      end
+    def self.get(path, &block)
+      @routes['GET'][/\A#{path}\z/] = block
     end
   end
 end
