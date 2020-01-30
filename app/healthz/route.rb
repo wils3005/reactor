@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-get '/healthz' do
+get /\A\/healthz\z/ do
   'ok'
 end

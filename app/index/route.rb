@@ -2,6 +2,6 @@
 
 INDEX = File.read("#{__dir__}/index.html")
 
-get '/' do
+get /\A\/\z/ do
   format INDEX, time: Time.now.utc
 end

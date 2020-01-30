@@ -2,25 +2,33 @@
 
 module Flump
   module Router
-    @routes = Hash.new({}).merge!(
-      'DELETE' => {},
-      'GET' => {},
-      'HEAD' => {},
-      'PATCH' => {},
-      'POST' => {},
-      'PUT' => {},
+    @routes = Hash.new([]).merge!(
+      'CONNECT' => [],
+      'DELETE' => [],
+      'GET' => [],
+      'HEAD' => [],
+      'OPTIONS' => [],
+      'PATCH' => [],
+      'POST' => [],
+      'PUT' => [],
+      'TRACE' => []
     )
 
-    def self.call(method, path)
-      @routes[method].
-        find { |route, handler| path =~ route }.
-        to_a.
-        last&.
-        call
+    @routes.keys.each do |key|
+      define_singleton_method(key.downcase) do |path, &block|
+        path.define_singleton_method(:call, &block)
+        @routes['GET'] << path
+      end
     end
 
-    def self.get(path, &block)
-      @routes['GET'][/\A#{path}\z/] = block
+    def self.call(method, path)
+      regexp = @routes[method].find do |regexp|
+        path =~ regexp
+      rescue TypeError => @error
+        stderr
+      end
+
+      regexp&.call
     end
   end
 end

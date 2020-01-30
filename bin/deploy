@@ -10,5 +10,4 @@ cp -v flump.service /etc/systemd/system/
 chown -R flump:flump /home/flump/
 systemctl daemon-reload
 systemctl restart flump.service
-
-journalctl --lines 24 --unit flump.service
+systemctl status flump.service
