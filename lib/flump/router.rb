@@ -24,8 +24,6 @@ module Flump
     def self.call(method, path)
       regexp = @routes[method].find do |regexp|
         path =~ regexp
-      rescue TypeError => @error
-        stderr
       end
 
       regexp&.call

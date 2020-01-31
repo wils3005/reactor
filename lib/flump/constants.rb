@@ -1,14 +1,19 @@
 # frozen_string_literal: true
 
 module Flump
-  NoCallbackError = Class.new(RuntimeError)
+  NoFiberError = Class.new(RuntimeError)
 
-  DSL_ENABLED = true
+  BAD_REQUEST = [400, 'Bad Request'].freeze
 
-  MASTER_PID = Process.pid
-  NUM_PROCESSES = 1
+  CONTENT =
+    "Content-Type: text/html; charset=utf-8\r\n" \
+    "Content-Length: %<content_length>s\r\n" \
+    "\r\n" \
+    "%<content>s"
 
-  MAXLEN = 16_384
+  HOST = ENV.fetch('HOST')
+
+  HTTP_VERSION_NOT_SUPPORTED = [505, 'HTTP Version Not Supported'].freeze
 
   HTTP_METHODS = %w[
     CONNECT
@@ -23,14 +28,24 @@ module Flump
   ].freeze
 
   HTTP_VERSION = 'HTTP/1.1'
+
+  INTERNAL_SERVER_ERROR = [500, 'Internal Server Error'].freeze
+
+  MASTER_PID = Process.pid
+
+  MAXLEN = 16_384
+
+  NUM_PROCESSES = ENV.fetch('NUM_PROCESSES').to_i
+
+  NOT_FOUND = [404, 'Not Found'].freeze
+
   MAX_PAYLOAD_SIZE = 16_384
 
-  HTTP_VERSION_NOT_SUPPORTED = [505, 'HTTP Version Not Supported'].freeze
-  INTERNAL_SERVER_ERROR = [500, 'Internal Server Error'].freeze
-  PAYLOAD_TOO_LARGE = [413, 'Payload Too Large'].freeze
-  NOT_FOUND = [404, 'Not Found'].freeze
-  BAD_REQUEST = [400, 'Bad Request'].freeze
   OK = [200, 'OK'].freeze
+
+  PAYLOAD_TOO_LARGE = [413, 'Payload Too Large'].freeze
+
+  PORT = ENV.fetch('PORT')
 
   RESPONSE =
     "HTTP/1.1 %<status_code>s %<reason_phrase>s\r\n" \
@@ -38,9 +53,5 @@ module Flump
     "Date: %<date>s\r\n" \
     "%<content>s"
 
-  CONTENT =
-    "Content-Type: text/html; charset=utf-8\r\n" \
-    "Content-Length: %<content_length>s\r\n" \
-    "\r\n" \
-    "%<content>s"
+  ROOT_FIBER = Fiber.current
 end
