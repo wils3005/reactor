@@ -3,11 +3,12 @@
 module Flump
   module Reactor
     module TCPSocket
-      def foo
+      def read_request_and_write_response
         @fiber = Fiber.current
         READ << self
         Fiber.yield
         @request = read_nonblock(MAXLEN)
+        READ.delete(self)
         @headers, @body = @request.split("\r\n\r\n")
         @headers = @headers.split("\r\n")
         @request_line = @headers.shift.split
@@ -26,14 +27,37 @@ module Flump
 
         write_nonblock(@response)
         close
-      rescue EOFError
-      ensure
+      rescue ::IO::EAGAINWaitReadable, ::IO::EAGAINWaitWritable, EOFError => @error
         READ.delete(self)
+        ::STDERR.write_async("#{inspect} #{@error.inspect}")
+      ensure
+        @fiber = nil
+      end
+
+      def write_request_and_read_response
+        @fiber = Fiber.current
+        WRITE << self
+        Fiber.yield
+        write_nonblock(REQUEST)
+        WRITE.delete(self)
+        READ << self
+        Fiber.yield
+        @response = read_nonblock(MAXLEN)
+        READ.delete(self)
+        close
+        @response
+      rescue ::IO::EAGAINWaitReadable, ::IO::EAGAINWaitWritable, EOFError => @error
+        READ.delete(self)
+        WRITE.delete(self)
+        ::STDERR.write_async("#{inspect} #{@error.inspect}")
+      ensure
         @fiber = nil
       end
 
       def resume
         @fiber.resume
+      rescue NoMethodError
+        raise(NoFiberError, inspect)
       end
 
       private
@@ -54,44 +78,9 @@ module Flump
 
         OK
       rescue => @error
+        ::STDERR.write_async("#{inspect} #{@error.inspect}")
         INTERNAL_SERVER_ERROR
       end
     end
   end
 end
-
-# def server_request_async
-#   fibers << Fiber.new do
-#     @request = read_nonblock(MAXLEN)
-#     write_nonblock(@response)
-#     close
-#   rescue ::IO::EAGAINWaitReadable => @error
-#     stderr
-#     server_request_async
-#   rescue => @error
-#     stderr
-#   ensure
-#     READ.delete(self)
-#     fibers.delete(Fiber.current)
-#   end
-
-#   READ << self
-# end
-
-# def client_request_async(req)
-#   fibers << Fiber.new do
-#     write_nonblock(req)
-#     Fiber.yield
-#     @res = read_nonblock(MAXLEN)
-#     close
-#   rescue ::IO::EAGAINWaitWritable => @error
-#     stderr
-#   rescue => @error
-#     stderr
-#   ensure
-#     WRITE.delete(self)
-#     fibers.delete(Fiber.current)
-#   end
-
-#   WRITE << self
-# end

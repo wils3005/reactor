@@ -47,11 +47,11 @@ module Flump
 
   PORT = ENV.fetch('PORT')
 
+  REQUEST = "GET / HTTP/1.1\r\n\r\n"
+
   RESPONSE =
     "HTTP/1.1 %<status_code>s %<reason_phrase>s\r\n" \
     "Connection: close\r\n" \
     "Date: %<date>s\r\n" \
     "%<content>s"
-
-  ROOT_FIBER = Fiber.current
 end

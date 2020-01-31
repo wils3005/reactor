@@ -16,7 +16,7 @@ module Flump
       end
 
       def resume
-        Fiber.new { accept_nonblock.foo }.resume
+        Fiber.new { accept_nonblock.read_request_and_write_response }.resume
       rescue ::IO::EAGAINWaitReadable
       end
     end

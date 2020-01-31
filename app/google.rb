@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 get /\A\/google\z/ do
-  ::TCPSocket.
-    new('www.google.ca', 80).
-    client_request_async("GET / HTTP/1.1\r\n\r\n")
+  host = 'www.google.ca'
+  port = 80
+  response = ::TCPSocket.new(host, port).write_request_and_read_response
+
+  "#{'#' * 80}\n#{response}\n#{'#' * 80}\n"
 end
