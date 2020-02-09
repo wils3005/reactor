@@ -5,8 +5,6 @@ echo "${BASH_SOURCE[0]}"
 git fetch
 git reset --hard origin/master
 
-rm -v /etc/systemd/system/flump.service
-cp -v flump.service /etc/systemd/system/
 chown -R flump:flump /home/flump/
 systemctl daemon-reload
 systemctl restart flump.service

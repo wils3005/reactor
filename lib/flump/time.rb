@@ -2,8 +2,10 @@
 
 module Flump
   module Time
-    def date_header
+    def http_date
       now.utc.strftime('%a, %d %b %Y %H:%M:%S GMT')
     end
   end
+
+  ::Time.extend Time
 end

@@ -1,27 +1,28 @@
 # frozen_string_literal: true
 
+require 'digest/sha1'
 require 'fiber'
 require 'socket'
 
-require_relative 'flump/constants'
-require_relative 'flump/dsl'
-require_relative 'flump/regexp'
-require_relative 'flump/router'
-require_relative 'flump/reactor'
-require_relative 'flump/time'
+# require 'pg'
 
-extend Flump::DSL
-require_relative '../app/index'
-require_relative '../app/google'
-require_relative '../app/healthz'
+pattern = File.join(__dir__, '**', '*.rb')
+Dir.glob(pattern).sort.each(&method(:require))
 
 module Flump
-  ::Regexp.include Regexp
-  ::Time.extend Time
-
   def self.call
-    ::TCPServer.listen_async
-    (NUM_PROCESSES - 1).times { Process.fork if Process.pid == MASTER_PID }
-    Reactor.call
+    READ << ::TCPServer.new(HOST, PORT)
+    warn "Listening at http://#{HOST}:#{PORT}!"
+
+    trap 'INT' do
+      warn "\nShutting down...\n"
+      exit
+    end
+
+    (Flump::NUM_PROCESSES - 1).times do
+      Process.fork if Process.pid == Flump::MASTER_PID
+    end
+
+    loop { select(READ, WRITE, ERROR).flatten.each(&:resume) }
   end
 end
