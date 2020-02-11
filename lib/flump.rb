@@ -6,12 +6,12 @@ require 'socket'
 
 # require 'pg'
 
-pattern = File.join(__dir__, '**', '*.rb')
-Dir.glob(pattern).sort.each(&method(:require))
+Dir.glob(File.join(__dir__, '**', '*.rb')).sort.each(&method(:require))
+Flump::APP_FILES.each(&method(:require))
 
 module Flump
   def self.call
-    READ << ::TCPServer.new(HOST, PORT)
+    ::TCPServer.new(HOST, PORT).listen_async
     warn "Listening at http://#{HOST}:#{PORT}!"
 
     trap 'INT' do
@@ -23,6 +23,6 @@ module Flump
       Process.fork if Process.pid == Flump::MASTER_PID
     end
 
-    loop { select(READ, WRITE, ERROR).flatten.each(&:resume) }
+    Async.run
   end
 end

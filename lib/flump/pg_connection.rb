@@ -11,5 +11,5 @@ module Flump
     end
   end
 
-  ::PG::Connection.include PGConnection if defined? ::PG::Connection
+  ::PG::Connection.include(PGConnection) if defined?(::PG::Connection)
 end

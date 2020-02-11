@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 module Flump
+  APP_FILES =
+    Dir.glob(File.join(Dir.pwd, 'app', '**', '*.rb')).freeze
+
   DBNAME = ::ENV['DBNAME']
   HOST = ::ENV['HOST']
   NUM_PROCESSES = ::ENV['NUM_PROCESSES'].to_i
@@ -9,12 +12,11 @@ module Flump
   MASTER_PID = Process.pid
   MAX_PAYLOAD_SIZE = 16_384
   VERSION = '0.1.0'
+  WEBSOCKET_MAGIC_UUID = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
 
   READ = []
   WRITE = []
   ERROR = []
-
-  INDEX_HTML = File.read(File.join(__dir__, 'index.html'))
 
   HTTP_METHODS = [
     'CONNECT',

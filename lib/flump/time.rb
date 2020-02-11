@@ -7,5 +7,5 @@ module Flump
     end
   end
 
-  ::Time.extend Time
+  ::Time.extend(Time)
 end

@@ -32,5 +32,5 @@ module Flump
     end
   end
 
-  ::ENV.extend ENV
+  ::ENV.extend(ENV)
 end

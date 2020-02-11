@@ -2,30 +2,42 @@
 
 module Flump
   module Async
-    attr_accessor :fiber
+    NoFiberError = Class.new(NoMethodError)
+
+    WAIT_READABLE = []
+    WAIT_WRITABLE = []
+
+    def self.run
+      loop { select(WAIT_READABLE, WAIT_WRITABLE).flatten.each(&:resume) }
+    end
+
+    def read_async(int = 16_384)
+      read_nonblock(int)
+    rescue ::IO::EAGAINWaitReadable
+      WAIT_READABLE.push_delete(self, &method(:_yield_fiber))
+      retry
+    end
+
+    def write_async(str)
+      write_nonblock(str)
+    rescue ::IO::EAGAINWaitWritable
+      WAIT_WRITABLE.push_delete(self, &method(:_yield_fiber))
+      retry
+    end
 
     def resume
-      fiber.resume
+      @fiber.resume
+    rescue NoMethodError
+      raise(NoFiberError, inspect)
     end
 
     private
 
-    def _async
-      yield
-    rescue ::IO::EAGAINWaitReadable
-      READ.push_delete(self, &_yield_fiber)
-      retry
-    rescue ::IO::EAGAINWaitWritable
-      WRITE.push_delete(self, &_yield_fiber)
-      retry
-    end
-
     def _yield_fiber
-      lambda do
-        self.fiber = Fiber.current
-        Fiber.yield
-        self.fiber = nil
-      end
+      @fiber = Fiber.current
+      Fiber.yield
     end
   end
+
+  ::IO.include(Async)
 end

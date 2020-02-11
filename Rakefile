@@ -2,7 +2,7 @@
 
 require 'yard'
 
-task default: ['build', 'install', 'yard']
+task default: ['build', 'install']
 
 desc "Run \"gem build flump.gemspec\""
 task :build do

@@ -9,5 +9,5 @@ module Flump
     end
   end
 
-  ::Array.include Array
+  ::Array.include(Array)
 end

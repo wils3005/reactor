@@ -89,7 +89,7 @@
   <dl>
     <dt>Defined in:</dt>
     <dd>lib/flump.rb<span class="defines">,<br />
-  lib/flump/hash.rb,<br /> lib/flump/http.rb,<br /> lib/flump/time.rb,<br /> lib/flump/__env.rb,<br /> lib/flump/array.rb,<br /> lib/flump/async.rb,<br /> lib/flump/index.rb,<br /> lib/flump/object.rb,<br /> lib/flump/string.rb,<br /> lib/flump/_constants.rb,<br /> lib/flump/tcp_server.rb,<br /> lib/flump/tcp_socket.rb,<br /> lib/flump/http_request.rb,<br /> lib/flump/http_response.rb,<br /> lib/flump/pg_connection.rb</span>
+  lib/flump/dsl.rb,<br /> lib/flump/hash.rb,<br /> lib/flump/time.rb,<br /> lib/flump/__env.rb,<br /> lib/flump/array.rb,<br /> lib/flump/async.rb,<br /> lib/flump/object.rb,<br /> lib/flump/router.rb,<br /> lib/flump/string.rb,<br /> lib/flump/_constants.rb,<br /> lib/flump/tcp_server.rb,<br /> lib/flump/tcp_socket.rb,<br /> lib/flump/http_exchange.rb,<br /> lib/flump/pg_connection.rb</span>
 </dd>
   </dl>
   
@@ -99,11 +99,11 @@
 <p class="children">
   
     
-      <strong class="modules">Modules:</strong> <span class='object_link'><a href="Flump/Array.html" title="Flump::Array (module)">Array</a></span>, <span class='object_link'><a href="Flump/Async.html" title="Flump::Async (module)">Async</a></span>, <span class='object_link'><a href="Flump/ENV.html" title="Flump::ENV (module)">ENV</a></span>, <span class='object_link'><a href="Flump/HTTP.html" title="Flump::HTTP (module)">HTTP</a></span>, <span class='object_link'><a href="Flump/Hash.html" title="Flump::Hash (module)">Hash</a></span>, <span class='object_link'><a href="Flump/Index.html" title="Flump::Index (module)">Index</a></span>, <span class='object_link'><a href="Flump/Object.html" title="Flump::Object (module)">Object</a></span>, <span class='object_link'><a href="Flump/PGConnection.html" title="Flump::PGConnection (module)">PGConnection</a></span>, <span class='object_link'><a href="Flump/String.html" title="Flump::String (module)">String</a></span>, <span class='object_link'><a href="Flump/TCPServer.html" title="Flump::TCPServer (module)">TCPServer</a></span>, <span class='object_link'><a href="Flump/TCPSocket.html" title="Flump::TCPSocket (module)">TCPSocket</a></span>, <span class='object_link'><a href="Flump/Time.html" title="Flump::Time (module)">Time</a></span>
+      <strong class="modules">Modules:</strong> <span class='object_link'><a href="Flump/Array.html" title="Flump::Array (module)">Array</a></span>, <span class='object_link'><a href="Flump/Async.html" title="Flump::Async (module)">Async</a></span>, <span class='object_link'><a href="Flump/DSL.html" title="Flump::DSL (module)">DSL</a></span>, <span class='object_link'><a href="Flump/ENV.html" title="Flump::ENV (module)">ENV</a></span>, <span class='object_link'><a href="Flump/Hash.html" title="Flump::Hash (module)">Hash</a></span>, <span class='object_link'><a href="Flump/Object.html" title="Flump::Object (module)">Object</a></span>, <span class='object_link'><a href="Flump/PGConnection.html" title="Flump::PGConnection (module)">PGConnection</a></span>, <span class='object_link'><a href="Flump/Router.html" title="Flump::Router (module)">Router</a></span>, <span class='object_link'><a href="Flump/String.html" title="Flump::String (module)">String</a></span>, <span class='object_link'><a href="Flump/TCPServer.html" title="Flump::TCPServer (module)">TCPServer</a></span>, <span class='object_link'><a href="Flump/TCPSocket.html" title="Flump::TCPSocket (module)">TCPSocket</a></span>, <span class='object_link'><a href="Flump/Time.html" title="Flump::Time (module)">Time</a></span>
     
   
     
-      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Flump/HTTPRequest.html" title="Flump::HTTPRequest (class)">HTTPRequest</a></span>, <span class='object_link'><a href="Flump/HTTPResponse.html" title="Flump::HTTPResponse (class)">HTTPResponse</a></span>
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Flump/HTTPExchange.html" title="Flump::HTTPExchange (class)">HTTPExchange</a></span>
     
   
 </p>
@@ -115,6 +115,11 @@
     </h2>
 
     <dl class="constants">
+      
+        <dt id="APP_FILES-constant" class="">APP_FILES =
+          
+        </dt>
+        <dd><pre class="code"><span class='const'>Dir</span><span class='period'>.</span><span class='id identifier rubyid_glob'>glob</span><span class='lparen'>(</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='const'>Dir</span><span class='period'>.</span><span class='id identifier rubyid_pwd'>pwd</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>app</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>**</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>*.rb</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
       
         <dt id="DBNAME-constant" class="">DBNAME =
           
@@ -151,6 +156,11 @@
         </dt>
         <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>0.1.0</span><span class='tstring_end'>&#39;</span></span></pre></dd>
       
+        <dt id="WEBSOCKET_MAGIC_UUID-constant" class="">WEBSOCKET_MAGIC_UUID =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>258EAFA5-E914-47DA-95CA-C5AB0DC85B11</span><span class='tstring_end'>&#39;</span></span></pre></dd>
+      
         <dt id="READ-constant" class="">READ =
           
         </dt>
@@ -165,11 +175,6 @@
           
         </dt>
         <dd><pre class="code"><span class='lbracket'>[</span><span class='rbracket'>]</span></pre></dd>
-      
-        <dt id="INDEX_HTML-constant" class="">INDEX_HTML =
-          
-        </dt>
-        <dd><pre class="code"><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_read'>read</span><span class='lparen'>(</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='id identifier rubyid___dir__'>__dir__</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>index.html</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='rparen'>)</span></pre></dd>
       
         <dt id="HTTP_METHODS-constant" class="">HTTP_METHODS =
           
@@ -362,6 +367,11 @@
   
   
   
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="Flump/Object.html" title="Flump::Object (module)">Object</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="Flump/Object.html#print_error-instance_method" title="Flump::Object#print_error (method)">#print_error</a></span></p>
+
+  
+  
   
   
   
@@ -380,7 +390,7 @@
   
   
   <h3 class="inherited">Methods included from <span class='object_link'><a href="Flump/Hash.html" title="Flump::Hash (module)">Hash</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="Flump/Hash.html#http_headers-instance_method" title="Flump::Hash#http_headers (method)">#http_headers</a></span></p>
+  <p class="inherited"><span class='object_link'><a href="Flump/Hash.html#http_headers-instance_method" title="Flump::Hash#http_headers (method)">#http_headers</a></span>, <span class='object_link'><a href="Flump/Hash.html#sec_websocket_accept-instance_method" title="Flump::Hash#sec_websocket_accept (method)">#sec_websocket_accept</a></span>, <span class='object_link'><a href="Flump/Hash.html#websocket_upgrade%3F-instance_method" title="Flump::Hash#websocket_upgrade? (method)">#websocket_upgrade?</a></span></p>
 
 
   <div id="class_method_details" class="method_details_list">
@@ -402,7 +412,6 @@
       <pre class="lines">
 
 
-13
 14
 15
 16
@@ -416,10 +425,11 @@
 24
 25
 26
-27</pre>
+27
+28</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/flump.rb', line 13</span>
+      <pre class="code"><span class="info file"># File 'lib/flump.rb', line 14</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_call'>call</span>
   <span class='const'><span class='object_link'><a href="#READ-constant" title="Flump::READ (constant)">READ</a></span></span> <span class='op'>&lt;&lt;</span> <span class='op'>::</span><span class='const'>TCPServer</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="#HOST-constant" title="Flump::HOST (constant)">HOST</a></span></span><span class='comma'>,</span> <span class='const'><span class='object_link'><a href="#PORT-constant" title="Flump::PORT (constant)">PORT</a></span></span><span class='rparen'>)</span>
@@ -446,7 +456,7 @@
 </div>
 
       <div id="footer">
-  Generated on Sun Feb  9 18:31:07 2020 by
+  Generated on Mon Feb 10 15:49:30 2020 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.24 (ruby-2.7.0).
 </div>

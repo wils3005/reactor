@@ -2,6 +2,10 @@
 
 module Flump
   module TCPServer
+    def listen_async
+      Async::WAIT_READABLE << self
+    end
+
     def resume
       Fiber.new { accept_nonblock.read_write }.resume
     rescue ::IO::EAGAINWaitReadable
@@ -9,5 +13,5 @@ module Flump
     end
   end
 
-  ::TCPServer.include TCPServer
+  ::TCPServer.include(TCPServer)
 end

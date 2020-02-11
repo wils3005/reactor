@@ -16,5 +16,5 @@ module Flump
     end
   end
 
-  ::String.include String
+  ::String.include(String)
 end

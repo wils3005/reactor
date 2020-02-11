@@ -1,0 +1,26 @@
+# frozen_string_literal: true
+
+module Flump
+  module Router
+    @routes = ::Hash.new([]).merge!(
+      'CONNECT' => [],
+      'DELETE' => [],
+      'GET' => [],
+      'HEAD' => [],
+      'OPTIONS' => [],
+      'PATCH' => [],
+      'POST' => [],
+      'PUT' => [],
+      'TRACE' => []
+    ).freeze
+
+    def self.call(method, path)
+      @routes[method].find { path =~ _1 }&.call ||
+        [404, { 'Connection' => 'close' }, '']
+    end
+
+    def self.push(method, path)
+      @routes[method].push(path)
+    end
+  end
+end
