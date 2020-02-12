@@ -31,20 +31,14 @@ module Flump
 
     private
 
-    def _raw_response
-      "HTTP/1.1 #{@status_code} #{REASON_PHRASE[@status_code]}\r\n" \
-      "#{_default_response_headers.merge(@response_headers).http_headers}\r\n" \
-      "#{@response_body.http_content}"
-    end
-
     def _response
-      if @path == '/siege'
+      if no_content?
         [204, {}, '']
-      elsif @request_line.any?(&:nil?) || !HTTP_METHODS.include?(@method)
+      elsif bad_request?
         [400, {}, '']
-      elsif @version != HTTP_VERSION
+      elsif http_version_not_supported?
         [505, {}, '']
-      elsif @request_headers.websocket_upgrade?
+      elsif switching_protocols?
         headers = {
           'Upgrade' => 'websocket',
           'Connection' => 'Upgrade',
@@ -56,8 +50,33 @@ module Flump
         Router.call(@method, @path)
       end
     rescue => @error
-      print_error
+      warn(inspect)
       [500, {}, '']
+    end
+
+    def _raw_response
+      "HTTP/1.1 #{@status_code} #{REASON_PHRASE[@status_code]}\r\n" \
+      "#{_default_response_headers.merge(@response_headers).http_headers}\r\n" \
+      "\r\n" \
+      "#{@response_body}"
+    end
+
+    ############################################################################
+
+    def no_content?
+      @path == '/siege'
+    end
+
+    def bad_request?
+      @request_line.any?(&:nil?) || !HTTP_METHODS.include?(@method)
+    end
+
+    def http_version_not_supported?
+      @version != HTTP_VERSION
+    end
+
+    def switching_protocols?
+      @request_headers.websocket_upgrade?
     end
 
     def _default_response_headers

@@ -2,14 +2,24 @@
 
 module Flump
   module PGConnection
-    include Async
+    module ClassMethods
+      def query_async(sql, dbname = DBNAME)
+        new(dbname: dbname).query_async(sql)
+      end
+    end
+
+    def self.included(mod)
+      mod.extend(ClassMethods)
+    end
 
     def query_async(sql)
-      setnonblocking(true)
       send_query(sql)
-      _async { get_result }
+      socket_io.wait_readable! unless socket_io.ready?
+      query_async = get_result
+      close
+      query_async
     end
   end
 
-  ::PG::Connection.include(PGConnection) if defined?(::PG::Connection)
+  ::PG::Connection.include(PGConnection)
 end

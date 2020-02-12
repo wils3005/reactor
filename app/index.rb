@@ -10,5 +10,5 @@ get /\A\/\z/ do
     port: Flump::PORT
   )
 
-  [200, {}, body]
+  [200, { 'Content-Type' => Flump::CONTENT_TYPE_HTML, 'Content-Length' => body.size }, body]
 end

@@ -2,12 +2,9 @@
 
 module Flump
   module TCPSocket
-    attr_reader :websocket
-
     def read_write
       @websocket ? _read_write_websocket : _read_write_http
     rescue EOFError => @error
-      @fiber = nil
       close
     end
 
@@ -20,13 +17,14 @@ module Flump
     def _read_write_http
       raw_request = read_async
       exchange = HTTPExchange.new(raw_request)
-      write_async(exchange.raw_response)
-      return close if exchange.response_headers['Connection'] == 'close'
+      raw_response = exchange.raw_response
 
-      @websocket = true if exchange.status_code == 101
+      write_async(raw_response)
+      return close unless exchange.status_code == 101
+
+      @websocket = true
       read_write
     rescue Errno::ECONNRESET => @error
-      @fiber = nil
       close
     end
 

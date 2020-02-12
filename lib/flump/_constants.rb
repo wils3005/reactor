@@ -4,19 +4,18 @@ module Flump
   APP_FILES =
     Dir.glob(File.join(Dir.pwd, 'app', '**', '*.rb')).freeze
 
-  DBNAME = ::ENV['DBNAME']
-  HOST = ::ENV['HOST']
-  NUM_PROCESSES = ::ENV['NUM_PROCESSES'].to_i
-  PORT = ::ENV['PORT']
+  DBNAME = ::ENV.fetch('DBNAME')
+  HOST = ::ENV.fetch('HOST')
+  NUM_PROCESSES = ::ENV.fetch('NUM_PROCESSES').to_i
+  PORT = ::ENV.fetch('PORT')
+
+  WAIT_READABLE = []
+  WAIT_WRITABLE = []
 
   MASTER_PID = Process.pid
   MAX_PAYLOAD_SIZE = 16_384
   VERSION = '0.1.0'
   WEBSOCKET_MAGIC_UUID = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
-
-  READ = []
-  WRITE = []
-  ERROR = []
 
   HTTP_METHODS = [
     'CONNECT',
