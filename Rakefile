@@ -11,7 +11,7 @@ end
 
 desc "Install gem"
 task :install do
-  system 'gem build flump.gemspec'
+  system 'gem install flump-0.1.0.gem'
 end
 
 namespace :db do
@@ -39,7 +39,6 @@ namespace :db do
 
   desc "Create users table"
   task :create_users_table do
-    require 'pg'
     require_relative 'lib/flump'
 
     sql = <<~SQL
@@ -58,6 +57,41 @@ namespace :db do
     SQL
 
     PG::Connection.query_async(sql)
+  end
+
+  desc "Insert 1000 records into users table"
+  task :insert_users do
+    require 'faker'
+    require_relative 'lib/flump'
+
+    random_user_sql = lambda do |*|
+      arr = [
+        Faker::Internet.free_email,
+        Digest::SHA1.base64digest(Faker::Internet.password),
+        Faker::Name.first_name,
+        Faker::Name.last_name.tr("'", ''),
+        Faker::Date.birthday.to_s,
+        Faker::Address.full_address.tr("'", '')
+      ]
+
+      str = arr.map { "'#{_1}'" }.join(', ')
+      "(#{str})"
+    end
+
+    users_sql = Array.new(1_000, &random_user_sql).join(', ')
+
+    sql = <<~SQL
+      INSERT INTO users(email, encrypted_password, first_name, last_name, date_of_birth, full_address)
+      VALUES #{users_sql}
+    SQL
+
+    Thread.new do
+      loop do
+        select(Flump::WAIT_READABLE, Flump::WAIT_WRITABLE).flatten.each(&:resume)
+      end
+    end
+
+    Fiber.new { PG::Connection.query_async(sql) }.resume
   end
 end
 

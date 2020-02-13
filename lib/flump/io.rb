@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'fiber'
+
 module Flump
   module IO
     NoFiberError = Class.new(NoMethodError)

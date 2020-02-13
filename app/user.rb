@@ -10,5 +10,5 @@ get /\A\/user\z/ do
 
   result = PG::Connection.query_async(sql)
   body = { user: result.first }.to_json
-  [200, { 'Content-Type' => Flump::CONTENT_TYPE_JSON, 'Content-Length' => body.size }, body]
+  [200, { 'Content-Type' => Flump::HTTP::CONTENT_TYPE_JSON, 'Content-Length' => body.size }, body]
 end

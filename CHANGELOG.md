@@ -1,6 +1,0 @@
-# CHANGELOG
-
-## 0.1.0 - 2020-01-26 (Jack Wilson)
-- [ADDED] TODO
-- [IMPROVED] TODO
-- [FIXED] TODO

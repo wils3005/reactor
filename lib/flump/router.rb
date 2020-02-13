@@ -14,10 +14,8 @@ module Flump
       'TRACE' => []
     ).freeze
 
-    @not_found = ->{ [404, { 'Connection' => 'close' }, ''] }
-
     def self.call(method, path)
-      @routes[method].find(@not_found) { path =~ _1 }&.call
+      @routes[method].find { path =~ _1 }&.call
     end
 
     def self.push(method, path)
