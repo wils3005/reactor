@@ -4,12 +4,10 @@ require 'fiber'
 
 module Flump
   module IO
-    NoFiberError = Class.new(NoMethodError)
-
     def resume
       @fiber.resume
-    rescue NoMethodError
-      raise(NoFiberError, inspect)
+    rescue => error
+      binding.stderr
     end
 
     def read_async(int = 16_384)
@@ -39,7 +37,7 @@ module Flump
       Fiber.yield
       WAIT_WRITABLE.delete(self)
     end
-  end
 
-  ::IO.include(IO)
+    ::IO.include(self)
+  end
 end

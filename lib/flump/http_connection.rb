@@ -21,7 +21,7 @@ module Flump
     def read_write
       raw_request = @tcp_socket.read_async
       request = HTTPRequest.parse(raw_request)
-      response = App.new(request).response
+      response = Application.new(request).response
       @tcp_socket.write_async(response)
       return WSConnection.new(@tcp_socket).read_write if response.status_code == 101
 

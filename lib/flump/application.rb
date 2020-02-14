@@ -3,10 +3,30 @@
 require 'digest/sha1'
 
 module Flump
-  class App
+  class Application
+    ROUTES = Hash.new([]).merge!(
+      'DELETE' => [],
+      'GET' => [],
+      'HEAD' => [],
+      'OPTIONS' => [],
+      'PATCH' => [],
+      'POST' => [],
+      'PUT' => []
+    ).freeze
+
     WEBSOCKET_MAGIC_UUID = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
 
-    attr_reader :request, :response
+    ROUTES.keys.each do |http_method|
+      Flump.define_singleton_method(http_method.downcase) do |route, &block|
+        route = /\A#{route}\z/ if route.is_a?(String)
+        route.define_singleton_method(:call, &block)
+        # Flump::Application.define_method(route)
+        ROUTES[http_method].push(route)
+      end
+    end
+
+    attr_reader :request,
+                :response
 
     def initialize(request)
       @request = request
@@ -36,12 +56,16 @@ module Flump
 
         HTTPResponse.new(status_code: 101, headers: headers)
       else
-        Flump.route(@request.method, @request.path) ||
-          HTTPResponse.new(status_code: 404)
+        _route
       end
-    rescue => @error
-      warn(inspect)
+    rescue => error
+      binding.stderr
       HTTPResponse.new(status_code: 500)
+    end
+
+    def _route
+      ROUTES[@request.method].find { @request.path =~ _1 }&.call ||
+        HTTPResponse.new(status_code: 404)
     end
   end
 end

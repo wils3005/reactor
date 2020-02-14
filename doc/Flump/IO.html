@@ -71,39 +71,23 @@
   
   
   
+  <dl>
+      <dt>Includes:</dt>
+      <dd>self</dd>
+  </dl>
+  
   
 
-  
-  <dl>
-    <dt>Included in:</dt>
-    <dd><span class='object_link'><a href="../Flump.html" title="Flump (module)">Flump</a></span></dd>
-  </dl>
   
 
   
   <dl>
     <dt>Defined in:</dt>
-    <dd>lib/flump/io.rb</dd>
+    <dd>lib/flump/core_ext/io.rb</dd>
   </dl>
   
 </div>
 
-
-  
-    <h2>
-      Constant Summary
-      <small><a href="#" class="constants_summary_toggle">collapse</a></small>
-    </h2>
-
-    <dl class="constants">
-      
-        <dt id="NoFiberError-constant" class="">NoFiberError =
-          
-        </dt>
-        <dd><pre class="code"><span class='const'>Class</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='const'>NoMethodError</span><span class='rparen'>)</span></pre></dd>
-      
-    </dl>
-  
 
 
 
@@ -233,6 +217,7 @@
   
 
 
+  
 
   <div id="instance_method_details" class="method_details_list">
     <h2>Instance Method Details</h2>
@@ -253,15 +238,15 @@
       <pre class="lines">
 
 
+13
+14
 15
 16
 17
-18
-19
-20</pre>
+18</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/flump/io.rb', line 15</span>
+      <pre class="code"><span class="info file"># File 'lib/flump/core_ext/io.rb', line 13</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_read_async'>read_async</span><span class='lparen'>(</span><span class='id identifier rubyid_int'>int</span> <span class='op'>=</span> <span class='int'>16_384</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_read_nonblock'>read_nonblock</span><span class='lparen'>(</span><span class='id identifier rubyid_int'>int</span><span class='rparen'>)</span>
@@ -289,19 +274,19 @@
       <pre class="lines">
 
 
+7
+8
 9
 10
-11
-12
-13</pre>
+11</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/flump/io.rb', line 9</span>
+      <pre class="code"><span class="info file"># File 'lib/flump/core_ext/io.rb', line 7</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_resume'>resume</span>
   <span class='ivar'>@fiber</span><span class='period'>.</span><span class='id identifier rubyid_resume'>resume</span>
-<span class='kw'>rescue</span> <span class='const'>NoMethodError</span>
-  <span class='id identifier rubyid_raise'>raise</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="#NoFiberError-constant" title="Flump::IO::NoFiberError (constant)">NoFiberError</a></span></span><span class='comma'>,</span> <span class='id identifier rubyid_inspect'>inspect</span><span class='rparen'>)</span>
+<span class='kw'>rescue</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_error'>error</span>
+  <span class='id identifier rubyid_binding'>binding</span><span class='period'>.</span><span class='id identifier rubyid_stderr'>stderr</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -323,15 +308,15 @@
       <pre class="lines">
 
 
+27
+28
 29
 30
 31
-32
-33
-34</pre>
+32</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/flump/io.rb', line 29</span>
+      <pre class="code"><span class="info file"># File 'lib/flump/core_ext/io.rb', line 27</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_wait_readable!'>wait_readable!</span>
   <span class='const'><span class='object_link'><a href="../Flump.html#WAIT_READABLE-constant" title="Flump::WAIT_READABLE (constant)">WAIT_READABLE</a></span></span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='kw'>self</span><span class='rparen'>)</span>
@@ -359,15 +344,15 @@
       <pre class="lines">
 
 
+34
+35
 36
 37
 38
-39
-40
-41</pre>
+39</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/flump/io.rb', line 36</span>
+      <pre class="code"><span class="info file"># File 'lib/flump/core_ext/io.rb', line 34</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_wait_writable!'>wait_writable!</span>
   <span class='const'><span class='object_link'><a href="../Flump.html#WAIT_WRITABLE-constant" title="Flump::WAIT_WRITABLE (constant)">WAIT_WRITABLE</a></span></span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='kw'>self</span><span class='rparen'>)</span>
@@ -395,15 +380,15 @@
       <pre class="lines">
 
 
+20
+21
 22
 23
 24
-25
-26
-27</pre>
+25</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/flump/io.rb', line 22</span>
+      <pre class="code"><span class="info file"># File 'lib/flump/core_ext/io.rb', line 20</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_write_async'>write_async</span><span class='lparen'>(</span><span class='id identifier rubyid_str'>str</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_write_nonblock'>write_nonblock</span><span class='lparen'>(</span><span class='id identifier rubyid_str'>str</span><span class='rparen'>)</span>
@@ -421,7 +406,7 @@
 </div>
 
       <div id="footer">
-  Generated on Thu Feb 13 23:24:42 2020 by
+  Generated on Fri Feb 14 14:55:15 2020 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.24 (ruby-2.7.0).
 </div>

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'pg'
+
 module Flump
   module PGConnection
     module ClassMethods
@@ -19,7 +21,7 @@ module Flump
       close
       query_async
     end
-  end
 
-  ::PG::Connection.include(PGConnection) if defined? ::PG::Connection
+    ::PG::Connection.include(self)
+  end
 end

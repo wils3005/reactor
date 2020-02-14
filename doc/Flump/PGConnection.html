@@ -71,19 +71,19 @@
   
   
   
+  <dl>
+      <dt>Includes:</dt>
+      <dd>self</dd>
+  </dl>
+  
   
 
-  
-  <dl>
-    <dt>Included in:</dt>
-    <dd><span class='object_link'><a href="../Flump.html" title="Flump (module)">Flump</a></span></dd>
-  </dl>
   
 
   
   <dl>
     <dt>Defined in:</dt>
-    <dd>lib/flump/pg_connection.rb</dd>
+    <dd>lib/flump/core_ext/pg_connection.rb</dd>
   </dl>
   
 </div>
@@ -170,6 +170,7 @@
   
 
 
+  
 
   <div id="class_method_details" class="method_details_list">
     <h2>Class Method Details</h2>
@@ -190,12 +191,12 @@
       <pre class="lines">
 
 
-11
-12
-13</pre>
+13
+14
+15</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/flump/pg_connection.rb', line 11</span>
+      <pre class="code"><span class="info file"># File 'lib/flump/core_ext/pg_connection.rb', line 13</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_included'>included</span><span class='lparen'>(</span><span class='id identifier rubyid_mod'>mod</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_mod'>mod</span><span class='period'>.</span><span class='id identifier rubyid_extend'>extend</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="PGConnection/ClassMethods.html" title="Flump::PGConnection::ClassMethods (module)">ClassMethods</a></span></span><span class='rparen'>)</span>
@@ -226,16 +227,16 @@
       <pre class="lines">
 
 
-15
-16
 17
 18
 19
 20
-21</pre>
+21
+22
+23</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/flump/pg_connection.rb', line 15</span>
+      <pre class="code"><span class="info file"># File 'lib/flump/core_ext/pg_connection.rb', line 17</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_query_async'>query_async</span><span class='lparen'>(</span><span class='id identifier rubyid_sql'>sql</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_send_query'>send_query</span><span class='lparen'>(</span><span class='id identifier rubyid_sql'>sql</span><span class='rparen'>)</span>
@@ -254,7 +255,7 @@
 </div>
 
       <div id="footer">
-  Generated on Thu Feb 13 23:24:42 2020 by
+  Generated on Fri Feb 14 14:55:15 2020 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.24 (ruby-2.7.0).
 </div>

@@ -354,7 +354,7 @@
 <span class='kw'>def</span> <span class='id identifier rubyid_read_write'>read_write</span>
   <span class='id identifier rubyid_raw_request'>raw_request</span> <span class='op'>=</span> <span class='ivar'>@tcp_socket</span><span class='period'>.</span><span class='id identifier rubyid_read_async'>read_async</span>
   <span class='id identifier rubyid_request'>request</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="HTTPRequest.html" title="Flump::HTTPRequest (class)">HTTPRequest</a></span></span><span class='period'>.</span><span class='id identifier rubyid_parse'><span class='object_link'><a href="HTTPRequest.html#parse-class_method" title="Flump::HTTPRequest.parse (method)">parse</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_raw_request'>raw_request</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_response'>response</span> <span class='op'>=</span> <span class='const'><span class='object_link'><a href="App.html" title="Flump::App (class)">App</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="App.html#initialize-instance_method" title="Flump::App#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_request'>request</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_response'><span class='object_link'><a href="App.html#response-instance_method" title="Flump::App#response (method)">response</a></span></span>
+  <span class='id identifier rubyid_response'>response</span> <span class='op'>=</span> <span class='const'>App</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_request'>request</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_response'>response</span>
   <span class='ivar'>@tcp_socket</span><span class='period'>.</span><span class='id identifier rubyid_write_async'>write_async</span><span class='lparen'>(</span><span class='id identifier rubyid_response'>response</span><span class='rparen'>)</span>
   <span class='kw'>return</span> <span class='const'><span class='object_link'><a href="WSConnection.html" title="Flump::WSConnection (class)">WSConnection</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="WSConnection.html#initialize-instance_method" title="Flump::WSConnection#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='ivar'>@tcp_socket</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_read_write'><span class='object_link'><a href="WSConnection.html#read_write-instance_method" title="Flump::WSConnection#read_write (method)">read_write</a></span></span> <span class='kw'>if</span> <span class='id identifier rubyid_response'>response</span><span class='period'>.</span><span class='id identifier rubyid_status_code'>status_code</span> <span class='op'>==</span> <span class='int'>101</span>
 
@@ -426,7 +426,7 @@
 </div>
 
       <div id="footer">
-  Generated on Thu Feb 13 23:24:43 2020 by
+  Generated on Fri Feb 14 14:55:16 2020 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.24 (ruby-2.7.0).
 </div>
