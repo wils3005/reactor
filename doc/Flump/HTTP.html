@@ -78,11 +78,97 @@
   
   <dl>
     <dt>Defined in:</dt>
-    <dd>lib/flump/http.rb</dd>
+    <dd>lib/flump/http.rb<span class="defines">,<br />
+  lib/flump/http/app.rb,<br /> lib/flump/http/request.rb,<br /> lib/flump/http/response.rb,<br /> lib/flump/http/connection.rb</span>
+</dd>
   </dl>
   
 </div>
 
+<h2>Defined Under Namespace</h2>
+<p class="children">
+  
+    
+  
+    
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="HTTP/App.html" title="Flump::HTTP::App (class)">App</a></span>, <span class='object_link'><a href="HTTP/Connection.html" title="Flump::HTTP::Connection (class)">Connection</a></span>, <span class='object_link'><a href="HTTP/Request.html" title="Flump::HTTP::Request (class)">Request</a></span>, <span class='object_link'><a href="HTTP/Response.html" title="Flump::HTTP::Response (class)">Response</a></span>
+    
+  
+</p>
+
+  
+    <h2>
+      Constant Summary
+      <small><a href="#" class="constants_summary_toggle">collapse</a></small>
+    </h2>
+
+    <dl class="constants">
+      
+        <dt id="ALLOWED_METHODS-constant" class="">ALLOWED_METHODS =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>TODO: DELETE OPTIONS PATCH PUT</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='lbracket'>[</span>
+  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>GET</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>HEAD</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>POST</span><span class='tstring_end'>&#39;</span></span>
+<span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
+      
+        <dt id="VERSION-constant" class="">VERSION =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>HTTP/1.1</span><span class='tstring_end'>&#39;</span></span></pre></dd>
+      
+        <dt id="REASON_PHRASE-constant" class="">REASON_PHRASE =
+          
+        </dt>
+        <dd><pre class="code"><span class='lbrace'>{</span>
+  <span class='int'>101</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Switching Protocols</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='int'>200</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>OK</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='int'>201</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Created</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='int'>204</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>No Content</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='int'>400</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Bad Request</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='int'>401</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Unauthorized</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='int'>403</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Forbidden</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='int'>404</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Not Found</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='int'>413</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Payload Too Large</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='int'>414</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>URI Too Long</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='int'>415</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Unsupported Media Type</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='int'>422</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Unprocessable Entity</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='int'>426</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Upgrade Required</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='int'>429</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Too Many Requests</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='int'>431</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Request Header Fields Too Large</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='int'>500</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Internal Server Error</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+  <span class='int'>505</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>HTTP Version Not Supported</span><span class='tstring_end'>&#39;</span></span>
+<span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
+      
+        <dt id="CONTENT_TYPE_HTML-constant" class="">CONTENT_TYPE_HTML =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>text/html; charset=utf-8</span><span class='tstring_end'>&#39;</span></span></pre></dd>
+      
+        <dt id="CONTENT_TYPE_JSON-constant" class="">CONTENT_TYPE_JSON =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>application/json; charset=utf-8</span><span class='tstring_end'>&#39;</span></span></pre></dd>
+      
+        <dt id="WEBSOCKET_MAGIC_UUID-constant" class="">WEBSOCKET_MAGIC_UUID =
+          
+        </dt>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>258EAFA5-E914-47DA-95CA-C5AB0DC85B11</span><span class='tstring_end'>&#39;</span></span></pre></dd>
+      
+    </dl>
+  
 
 
 
@@ -101,7 +187,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#request-class_method" title="request (class method)">.<strong>request</strong>(method:, path:, host:, content: nil)  &#x21d2; Object </a>
+      <a href="#server-class_method" title="server (class method)">.<strong>server</strong>(host, port)  &#x21d2; Object </a>
     
 
     
@@ -130,9 +216,9 @@
 
     
       <div class="method_details first">
-  <h3 class="signature first" id="request-class_method">
+  <h3 class="signature first" id="server-class_method">
   
-    .<strong>request</strong>(method:, path:, host:, content: nil)  &#x21d2; <tt><span class='object_link'><a href="Object.html" title="Flump::Object (module)">Object</a></span></tt> 
+    .<strong>server</strong>(host, port)  &#x21d2; <tt>Object</tt> 
   
 
   
@@ -144,25 +230,21 @@
       <pre class="lines">
 
 
-5
-6
-7
-8
-9
-10
-11
-12</pre>
+39
+40
+41
+42
+43
+44</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/flump/http.rb', line 5</span>
+      <pre class="code"><span class="info file"># File 'lib/flump/http.rb', line 39</span>
 
-<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_request'>request</span><span class='lparen'>(</span><span class='label'>method:</span><span class='comma'>,</span> <span class='label'>path:</span><span class='comma'>,</span> <span class='label'>host:</span><span class='comma'>,</span> <span class='label'>content:</span> <span class='kw'>nil</span><span class='rparen'>)</span>
-  <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_method'>method</span><span class='embexpr_end'>}</span><span class='tstring_content'> </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_path'>path</span><span class='embexpr_end'>}</span><span class='tstring_content'> HTTP/1.1\r\n</span><span class='tstring_end'>&quot;</span></span> \
-  <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Host: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_host'>host</span><span class='embexpr_end'>}</span><span class='tstring_content'>\r\n</span><span class='tstring_end'>&quot;</span></span> \
-  <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>User-Agent: flump/0.1.0\r\n</span><span class='tstring_end'>&quot;</span></span> \
-  <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Accept: */*\r\n</span><span class='tstring_end'>&quot;</span></span> \
-  <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Connection: keep-alive\r\n</span><span class='tstring_end'>&quot;</span></span> \
-  <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_content'>content</span> <span class='op'>||</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\r\n</span><span class='tstring_end'>&quot;</span></span><span class='embexpr_end'>}</span><span class='tstring_end'>&quot;</span></span>
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_server'>server</span><span class='lparen'>(</span><span class='id identifier rubyid_host'>host</span><span class='comma'>,</span> <span class='id identifier rubyid_port'>port</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_server'>server</span> <span class='op'>=</span> <span class='op'>::</span><span class='const'>TCPServer</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_host'>host</span><span class='comma'>,</span> <span class='id identifier rubyid_port'>port</span><span class='rparen'>)</span>
+  <span class='op'>::</span><span class='const'>IO</span><span class='op'>::</span><span class='const'>WAIT_READABLE</span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='id identifier rubyid_server'>server</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_warn'>warn</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Listening at http://</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_host'>host</span><span class='embexpr_end'>}</span><span class='tstring_content'>:</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_port'>port</span><span class='embexpr_end'>}</span><span class='tstring_content'>!</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_server'>server</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -174,7 +256,7 @@
 </div>
 
       <div id="footer">
-  Generated on Mon Feb 10 00:14:13 2020 by
+  Generated on Thu Feb 13 20:56:05 2020 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.24 (ruby-2.7.0).
 </div>

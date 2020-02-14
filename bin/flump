@@ -1,6 +1,63 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require_relative '../lib/flump'
+ENV['DBNAME'] ||= 'flump'
+ENV['HOST'] ||= '127.0.0.1'
+ENV['PORT'] ||= '49916'
 
-Flump.call
+require 'pg'
+require 'flump'
+
+index_html = File.read(File.join(__dir__, 'index.html'))
+
+Flump.get '/' do
+  body = format(
+    index_html,
+    title: 'Flump!',
+    host: ENV.fetch('HOST'),
+    port: ENV.fetch('PORT')
+  )
+
+  Flump::HTTPResponse.new(
+    status_code: 200,
+    headers: {
+      'Content-Type' => Flump::CONTENT_TYPE_HTML,
+      'Content-Length' => body.size
+    },
+    body: body
+  )
+end
+
+Flump.head '/siege' do
+  Flump::HTTPResponse.new(status_code: 204)
+end
+
+Flump.get '/user' do
+  sql = <<~SQL
+    SELECT *
+    FROM users
+    ORDER BY random()
+    LIMIT 1
+  SQL
+
+  result = PG::Connection.query_async(sql)
+  body = { user: result.first }.to_json
+
+  Flump::HTTPResponse.new(
+    status_code: 200,
+    headers: {
+      'Content-Type' => Flump::CONTENT_TYPE_JSON,
+      'Content-Length' => body.size
+    },
+    body: body
+  )
+end
+
+Flump.listen_async(ENV.fetch('HOST'), ENV.fetch('PORT'))
+
+trap 'INT' do
+  warn "\nShutting down...\n"
+  exit
+end
+
+Flump.run

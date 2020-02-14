@@ -1,58 +1,58 @@
 # frozen_string_literal: true
 
-require_relative 'flump/env'
-require_relative 'flump/array'
-require_relative 'flump/http'
-require_relative 'flump/dsl'
+require 'fiber'
+require 'socket'
+require_relative 'flump/app'
+require_relative 'flump/http_connection'
+require_relative 'flump/http_request'
+require_relative 'flump/http_response'
 require_relative 'flump/io'
-require_relative 'flump/router'
-require_relative 'flump/string'
+require_relative 'flump/pg_connection'
 require_relative 'flump/tcp_server'
-
-require_relative 'flump/http/app'
-require_relative 'flump/http/connection'
-require_relative 'flump/http/hash'
-require_relative 'flump/http/request'
-require_relative 'flump/http/response'
-require_relative 'flump/http/server'
-require_relative 'flump/http/time'
-
-require_relative 'flump/pg/connection'
-require_relative 'flump/ws/connection'
-
-Dir.glob(File.join(Dir.pwd, 'app', '**', '*.rb')).each(&method(:require))
+require_relative 'flump/ws_connection'
 
 module Flump
-  DBNAME = ::ENV.fetch('DBNAME')
-  HOST = ::ENV.fetch('HOST')
-  NUM_PROCESSES = ::ENV.fetch('NUM_PROCESSES').to_i
-  PORT = ::ENV.fetch('PORT')
+  CONTENT_TYPE_HTML = 'text/html; charset=utf-8'
+  CONTENT_TYPE_JSON = 'application/json; charset=utf-8'
+
+  ROUTES = Hash.new([]).merge!(
+    'DELETE' => [],
+    'GET' => [],
+    'HEAD' => [],
+    'OPTIONS' => [],
+    'PATCH' => [],
+    'POST' => [],
+    'PUT' => []
+  ).freeze
 
   WAIT_READABLE = []
   WAIT_WRITABLE = []
 
-  MASTER_PID = Process.pid
-  MAX_PAYLOAD_SIZE = 16_384
-  VERSION = '0.1.0'
+  def self.async
+    Fiber.new { yield }.resume
+  end
 
-  def self.call
-    HTTP::Server.new.wait_readable!
+  def self.listen_async(host, port)
+    server = ::TCPServer.new(host, port)
+    server.extend(TCPServer)
+    WAIT_READABLE.push(server)
+    warn("Listening at http://#{host}:#{port}!")
+    server
+  end
 
-    trap 'INT' do
-      warn "\nShutting down...\n"
-      exit
+  def self.route(method, path)
+    ROUTES[method].find { path =~ _1 }&.call
+  end
+
+  def self.run
+    loop { select(WAIT_READABLE, WAIT_WRITABLE).flatten.each(&:resume) }
+  end
+
+  ROUTES.keys.each do |http_method|
+    define_singleton_method(http_method.downcase) do |route, &block|
+      route = /\A#{route}\z/ if route.is_a?(String)
+      route.define_singleton_method(:call, &block)
+      ROUTES[http_method].push(route)
     end
-
-    (Flump::NUM_PROCESSES - 1).times do
-      Process.fork if Process.pid == Flump::MASTER_PID
-    end
-
-    Thread.new do
-      loop do
-        select(WAIT_READABLE, WAIT_WRITABLE).flatten.each(&:resume)
-      end
-    end
-
-    sleep
   end
 end

@@ -74,11 +74,6 @@
   
 
   
-  <dl>
-    <dt>Included in:</dt>
-    <dd><span class='object_link'><a href="../Flump.html" title="Flump (module)">Flump</a></span></dd>
-  </dl>
-  
 
   
   <dl>
@@ -137,7 +132,7 @@
       <div class="method_details first">
   <h3 class="signature first" id="resume-instance_method">
   
-    #<strong>resume</strong>  &#x21d2; <tt><span class='object_link'><a href="Object.html" title="Flump::Object (module)">Object</a></span></tt> 
+    #<strong>resume</strong>  &#x21d2; <tt>Object</tt> 
   
 
   
@@ -151,17 +146,13 @@
 
 5
 6
-7
-8
-9</pre>
+7</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/flump/tcp_server.rb', line 5</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_resume'>resume</span>
-  <span class='const'>Fiber</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_accept_nonblock'>accept_nonblock</span><span class='period'>.</span><span class='id identifier rubyid_read_write'>read_write</span> <span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_resume'>resume</span>
-<span class='kw'>rescue</span> <span class='op'>::</span><span class='const'>IO</span><span class='op'>::</span><span class='const'>EAGAINWaitReadable</span>  <span class='comment'># A forked process can result in socket readiness false positives
-</span>
+  <span class='const'><span class='object_link'><a href="../Flump.html" title="Flump (module)">Flump</a></span></span><span class='period'>.</span><span class='id identifier rubyid_async'><span class='object_link'><a href="../Flump.html#async-class_method" title="Flump.async (method)">async</a></span></span> <span class='lbrace'>{</span> <span class='const'><span class='object_link'><a href="HTTPConnection.html" title="Flump::HTTPConnection (class)">HTTPConnection</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="HTTPConnection.html#initialize-instance_method" title="Flump::HTTPConnection#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='id identifier rubyid_accept_nonblock'>accept_nonblock</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_read_write'><span class='object_link'><a href="HTTPConnection.html#read_write-instance_method" title="Flump::HTTPConnection#read_write (method)">read_write</a></span></span> <span class='rbrace'>}</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -173,7 +164,7 @@
 </div>
 
       <div id="footer">
-  Generated on Mon Feb 10 15:49:30 2020 by
+  Generated on Thu Feb 13 23:24:42 2020 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.24 (ruby-2.7.0).
 </div>

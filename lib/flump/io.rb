@@ -27,17 +27,17 @@ module Flump
     end
 
     def wait_readable!
-      WAIT_READABLE.push_delete(self) do
-        @fiber = Fiber.current
-        Fiber.yield
-      end
+      WAIT_READABLE.push(self)
+      @fiber = Fiber.current
+      Fiber.yield
+      WAIT_READABLE.delete(self)
     end
 
     def wait_writable!
-      WAIT_WRITABLE.push_delete(self) do
-        @fiber = Fiber.current
-        Fiber.yield
-      end
+      WAIT_WRITABLE.push(self)
+      @fiber = Fiber.current
+      Fiber.yield
+      WAIT_WRITABLE.delete(self)
     end
   end
 

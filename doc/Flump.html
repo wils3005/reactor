@@ -69,16 +69,11 @@
 
   
   
-  <dl>
-      <dt>Extended by:</dt>
-      <dd><span class='object_link'><a href="Flump/ENV.html" title="Flump::ENV (module)">ENV</a></span>, <span class='object_link'><a href="Flump/Time.html" title="Flump::Time (module)">Time</a></span></dd>
-  </dl>
-  
   
   
   <dl>
       <dt>Includes:</dt>
-      <dd><span class='object_link'><a href="Flump/Array.html" title="Flump::Array (module)">Array</a></span>, <span class='object_link'><a href="Flump/Hash.html" title="Flump::Hash (module)">Hash</a></span>, <span class='object_link'><a href="Flump/Object.html" title="Flump::Object (module)">Object</a></span>, <span class='object_link'><a href="Flump/PGConnection.html" title="Flump::PGConnection (module)">PGConnection</a></span>, <span class='object_link'><a href="Flump/String.html" title="Flump::String (module)">String</a></span>, <span class='object_link'><a href="Flump/TCPServer.html" title="Flump::TCPServer (module)">TCPServer</a></span>, <span class='object_link'><a href="Flump/TCPSocket.html" title="Flump::TCPSocket (module)">TCPSocket</a></span></dd>
+      <dd><span class='object_link'><a href="Flump/IO.html" title="Flump::IO (module)">IO</a></span>, <span class='object_link'><a href="Flump/PGConnection.html" title="Flump::PGConnection (module)">PGConnection</a></span></dd>
   </dl>
   
   
@@ -89,7 +84,7 @@
   <dl>
     <dt>Defined in:</dt>
     <dd>lib/flump.rb<span class="defines">,<br />
-  lib/flump/dsl.rb,<br /> lib/flump/hash.rb,<br /> lib/flump/time.rb,<br /> lib/flump/__env.rb,<br /> lib/flump/array.rb,<br /> lib/flump/async.rb,<br /> lib/flump/object.rb,<br /> lib/flump/router.rb,<br /> lib/flump/string.rb,<br /> lib/flump/_constants.rb,<br /> lib/flump/tcp_server.rb,<br /> lib/flump/tcp_socket.rb,<br /> lib/flump/http_exchange.rb,<br /> lib/flump/pg_connection.rb</span>
+  lib/flump/io.rb,<br /> lib/flump/app.rb,<br /> lib/flump/tcp_server.rb,<br /> lib/flump/http_request.rb,<br /> lib/flump/http_response.rb,<br /> lib/flump/pg_connection.rb,<br /> lib/flump/ws_connection.rb,<br /> lib/flump/http_connection.rb</span>
 </dd>
   </dl>
   
@@ -99,11 +94,11 @@
 <p class="children">
   
     
-      <strong class="modules">Modules:</strong> <span class='object_link'><a href="Flump/Array.html" title="Flump::Array (module)">Array</a></span>, <span class='object_link'><a href="Flump/Async.html" title="Flump::Async (module)">Async</a></span>, <span class='object_link'><a href="Flump/DSL.html" title="Flump::DSL (module)">DSL</a></span>, <span class='object_link'><a href="Flump/ENV.html" title="Flump::ENV (module)">ENV</a></span>, <span class='object_link'><a href="Flump/Hash.html" title="Flump::Hash (module)">Hash</a></span>, <span class='object_link'><a href="Flump/Object.html" title="Flump::Object (module)">Object</a></span>, <span class='object_link'><a href="Flump/PGConnection.html" title="Flump::PGConnection (module)">PGConnection</a></span>, <span class='object_link'><a href="Flump/Router.html" title="Flump::Router (module)">Router</a></span>, <span class='object_link'><a href="Flump/String.html" title="Flump::String (module)">String</a></span>, <span class='object_link'><a href="Flump/TCPServer.html" title="Flump::TCPServer (module)">TCPServer</a></span>, <span class='object_link'><a href="Flump/TCPSocket.html" title="Flump::TCPSocket (module)">TCPSocket</a></span>, <span class='object_link'><a href="Flump/Time.html" title="Flump::Time (module)">Time</a></span>
+      <strong class="modules">Modules:</strong> <span class='object_link'><a href="Flump/IO.html" title="Flump::IO (module)">IO</a></span>, <span class='object_link'><a href="Flump/PGConnection.html" title="Flump::PGConnection (module)">PGConnection</a></span>, <span class='object_link'><a href="Flump/TCPServer.html" title="Flump::TCPServer (module)">TCPServer</a></span>
     
   
     
-      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Flump/HTTPExchange.html" title="Flump::HTTPExchange (class)">HTTPExchange</a></span>
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Flump/App.html" title="Flump::App (class)">App</a></span>, <span class='object_link'><a href="Flump/HTTPConnection.html" title="Flump::HTTPConnection (class)">HTTPConnection</a></span>, <span class='object_link'><a href="Flump/HTTPRequest.html" title="Flump::HTTPRequest (class)">HTTPRequest</a></span>, <span class='object_link'><a href="Flump/HTTPResponse.html" title="Flump::HTTPResponse (class)">HTTPResponse</a></span>, <span class='object_link'><a href="Flump/WSConnection.html" title="Flump::WSConnection (class)">WSConnection</a></span>
     
   
 </p>
@@ -116,109 +111,6 @@
 
     <dl class="constants">
       
-        <dt id="APP_FILES-constant" class="">APP_FILES =
-          
-        </dt>
-        <dd><pre class="code"><span class='const'>Dir</span><span class='period'>.</span><span class='id identifier rubyid_glob'>glob</span><span class='lparen'>(</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='const'>Dir</span><span class='period'>.</span><span class='id identifier rubyid_pwd'>pwd</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>app</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>**</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>*.rb</span><span class='tstring_end'>&#39;</span></span><span class='rparen'>)</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
-      
-        <dt id="DBNAME-constant" class="">DBNAME =
-          
-        </dt>
-        <dd><pre class="code"><span class='op'>::</span><span class='const'>ENV</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DBNAME</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span></pre></dd>
-      
-        <dt id="HOST-constant" class="">HOST =
-          
-        </dt>
-        <dd><pre class="code"><span class='op'>::</span><span class='const'>ENV</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>HOST</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span></pre></dd>
-      
-        <dt id="NUM_PROCESSES-constant" class="">NUM_PROCESSES =
-          
-        </dt>
-        <dd><pre class="code"><span class='op'>::</span><span class='const'>ENV</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>NUM_PROCESSES</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span></pre></dd>
-      
-        <dt id="PORT-constant" class="">PORT =
-          
-        </dt>
-        <dd><pre class="code"><span class='op'>::</span><span class='const'>ENV</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>PORT</span><span class='tstring_end'>&#39;</span></span><span class='rbracket'>]</span></pre></dd>
-      
-        <dt id="MASTER_PID-constant" class="">MASTER_PID =
-          
-        </dt>
-        <dd><pre class="code"><span class='const'>Process</span><span class='period'>.</span><span class='id identifier rubyid_pid'>pid</span></pre></dd>
-      
-        <dt id="MAX_PAYLOAD_SIZE-constant" class="">MAX_PAYLOAD_SIZE =
-          
-        </dt>
-        <dd><pre class="code"><span class='int'>16_384</span></pre></dd>
-      
-        <dt id="VERSION-constant" class="">VERSION =
-          
-        </dt>
-        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>0.1.0</span><span class='tstring_end'>&#39;</span></span></pre></dd>
-      
-        <dt id="WEBSOCKET_MAGIC_UUID-constant" class="">WEBSOCKET_MAGIC_UUID =
-          
-        </dt>
-        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>258EAFA5-E914-47DA-95CA-C5AB0DC85B11</span><span class='tstring_end'>&#39;</span></span></pre></dd>
-      
-        <dt id="READ-constant" class="">READ =
-          
-        </dt>
-        <dd><pre class="code"><span class='lbracket'>[</span><span class='rbracket'>]</span></pre></dd>
-      
-        <dt id="WRITE-constant" class="">WRITE =
-          
-        </dt>
-        <dd><pre class="code"><span class='lbracket'>[</span><span class='rbracket'>]</span></pre></dd>
-      
-        <dt id="ERROR-constant" class="">ERROR =
-          
-        </dt>
-        <dd><pre class="code"><span class='lbracket'>[</span><span class='rbracket'>]</span></pre></dd>
-      
-        <dt id="HTTP_METHODS-constant" class="">HTTP_METHODS =
-          
-        </dt>
-        <dd><pre class="code"><span class='lbracket'>[</span>
-  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>CONNECT</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DELETE</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>GET</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>HEAD</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>OPTIONS</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>PATCH</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>POST</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>PUT</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>TRACE</span><span class='tstring_end'>&#39;</span></span>
-<span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
-      
-        <dt id="REASON_PHRASE-constant" class="">REASON_PHRASE =
-          
-        </dt>
-        <dd><pre class="code"><span class='lbrace'>{</span>
-  <span class='int'>101</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Switching Protocols</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='int'>200</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>OK</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='int'>201</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Created</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='int'>204</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>No Content</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='int'>400</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Bad Request</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='int'>401</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Unauthorized</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='int'>403</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Forbidden</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='int'>404</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Not Found</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='int'>413</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Payload Too Large</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='int'>414</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>URI Too Long</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='int'>415</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Unsupported Media Type</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='int'>422</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Unprocessable Entity</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='int'>426</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Upgrade Required</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='int'>429</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Too Many Requests</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='int'>431</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Request Header Fields Too Large</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='int'>500</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>Internal Server Error</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
-  <span class='int'>505</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>HTTP Version Not Supported</span><span class='tstring_end'>&#39;</span></span>
-<span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
-      
-        <dt id="HTTP_VERSION-constant" class="">HTTP_VERSION =
-          
-        </dt>
-        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>HTTP/1.1</span><span class='tstring_end'>&#39;</span></span></pre></dd>
-      
         <dt id="CONTENT_TYPE_HTML-constant" class="">CONTENT_TYPE_HTML =
           
         </dt>
@@ -229,23 +121,42 @@
         </dt>
         <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>application/json; charset=utf-8</span><span class='tstring_end'>&#39;</span></span></pre></dd>
       
+        <dt id="ROUTES-constant" class="">ROUTES =
+          
+        </dt>
+        <dd><pre class="code"><span class='const'>Hash</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='lbracket'>[</span><span class='rbracket'>]</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_merge!'>merge!</span><span class='lparen'>(</span>
+  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>DELETE</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='lbracket'>[</span><span class='rbracket'>]</span><span class='comma'>,</span>
+  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>GET</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='lbracket'>[</span><span class='rbracket'>]</span><span class='comma'>,</span>
+  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>HEAD</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='lbracket'>[</span><span class='rbracket'>]</span><span class='comma'>,</span>
+  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>OPTIONS</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='lbracket'>[</span><span class='rbracket'>]</span><span class='comma'>,</span>
+  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>PATCH</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='lbracket'>[</span><span class='rbracket'>]</span><span class='comma'>,</span>
+  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>POST</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='lbracket'>[</span><span class='rbracket'>]</span><span class='comma'>,</span>
+  <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>PUT</span><span class='tstring_end'>&#39;</span></span> <span class='op'>=&gt;</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+<span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
+      
+        <dt id="WAIT_READABLE-constant" class="">WAIT_READABLE =
+          
+        </dt>
+        <dd><pre class="code"><span class='lbracket'>[</span><span class='rbracket'>]</span></pre></dd>
+      
+        <dt id="WAIT_WRITABLE-constant" class="">WAIT_WRITABLE =
+          
+        </dt>
+        <dd><pre class="code"><span class='lbracket'>[</span><span class='rbracket'>]</span></pre></dd>
+      
     </dl>
   
 
 
 
-
-
-
-  <h2>Instance Attribute Summary</h2>
-  
-  <h3 class="inherited">Attributes included from <span class='object_link'><a href="Flump/Async.html" title="Flump::Async (module)">Async</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="Flump/Async.html#fiber-instance_method" title="Flump::Async#fiber (method)">#fiber</a></span></p>
-
   
   
-  <h3 class="inherited">Attributes included from <span class='object_link'><a href="Flump/TCPSocket.html" title="Flump::TCPSocket (module)">TCPSocket</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="Flump/TCPSocket.html#websocket-instance_method" title="Flump::TCPSocket#websocket (method)">#websocket</a></span></p>
+  <h3 class="inherited">Constants included
+     from <span class='object_link'><a href="Flump/IO.html" title="Flump::IO (module)">IO</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="Flump/IO.html#NoFiberError-constant" title="Flump::IO::NoFiberError (constant)">IO::NoFiberError</a></span></p>
+
+
+
 
 
   
@@ -259,7 +170,73 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#call-class_method" title="call (class method)">.<strong>call</strong>  &#x21d2; Object </a>
+      <a href="#async-class_method" title="async (class method)">.<strong>async</strong>  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#listen_async-class_method" title="listen_async (class method)">.<strong>listen_async</strong>(host, port)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#route-class_method" title="route (class method)">.<strong>route</strong>(method, path)  &#x21d2; Object </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#run-class_method" title="run (class method)">.<strong>run</strong>  &#x21d2; Object </a>
     
 
     
@@ -290,30 +267,8 @@
   
   
   
-  <h3 class="inherited">Methods included from <span class='object_link'><a href="Flump/ENV.html" title="Flump::ENV (module)">ENV</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="Flump/ENV.html#extended-class_method" title="Flump::ENV.extended (method)">extended</a></span></p>
-
-  
-  
-  
-  
-  
-  
-  
-  
-  <h3 class="inherited">Methods included from <span class='object_link'><a href="Flump/Time.html" title="Flump::Time (module)">Time</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="Flump/Time.html#http_date-instance_method" title="Flump::Time#http_date (method)">http_date</a></span></p>
-
-  
-  
-  
-  
-  
-  
-  
-  
   <h3 class="inherited">Methods included from <span class='object_link'><a href="Flump/PGConnection.html" title="Flump::PGConnection (module)">PGConnection</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="Flump/PGConnection.html#query_async-instance_method" title="Flump::PGConnection#query_async (method)">#query_async</a></span></p>
+  <p class="inherited"><span class='object_link'><a href="Flump/PGConnection.html#included-class_method" title="Flump::PGConnection.included (method)">included</a></span>, <span class='object_link'><a href="Flump/PGConnection.html#query_async-instance_method" title="Flump::PGConnection#query_async (method)">#query_async</a></span></p>
 
   
   
@@ -323,74 +278,8 @@
   
   
   
-  <h3 class="inherited">Methods included from <span class='object_link'><a href="Flump/Async.html" title="Flump::Async (module)">Async</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="Flump/Async.html#resume-instance_method" title="Flump::Async#resume (method)">#resume</a></span></p>
-
-  
-  
-  
-  
-  
-  
-  
-  
-  <h3 class="inherited">Methods included from <span class='object_link'><a href="Flump/TCPSocket.html" title="Flump::TCPSocket (module)">TCPSocket</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="Flump/TCPSocket.html#read_write-instance_method" title="Flump::TCPSocket#read_write (method)">#read_write</a></span>, <span class='object_link'><a href="Flump/TCPSocket.html#write_read-instance_method" title="Flump::TCPSocket#write_read (method)">#write_read</a></span></p>
-
-  
-  
-  
-  
-  
-  
-  
-  
-  <h3 class="inherited">Methods included from <span class='object_link'><a href="Flump/TCPServer.html" title="Flump::TCPServer (module)">TCPServer</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="Flump/TCPServer.html#resume-instance_method" title="Flump::TCPServer#resume (method)">#resume</a></span></p>
-
-  
-  
-  
-  
-  
-  
-  
-  
-  <h3 class="inherited">Methods included from <span class='object_link'><a href="Flump/String.html" title="Flump::String (module)">String</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="Flump/String.html#base64digest-instance_method" title="Flump::String#base64digest (method)">#base64digest</a></span>, <span class='object_link'><a href="Flump/String.html#http_content-instance_method" title="Flump::String#http_content (method)">#http_content</a></span></p>
-
-  
-  
-  
-  
-  
-  
-  
-  
-  <h3 class="inherited">Methods included from <span class='object_link'><a href="Flump/Object.html" title="Flump::Object (module)">Object</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="Flump/Object.html#print_error-instance_method" title="Flump::Object#print_error (method)">#print_error</a></span></p>
-
-  
-  
-  
-  
-  
-  
-  
-  
-  <h3 class="inherited">Methods included from <span class='object_link'><a href="Flump/Array.html" title="Flump::Array (module)">Array</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="Flump/Array.html#push_delete-instance_method" title="Flump::Array#push_delete (method)">#push_delete</a></span></p>
-
-  
-  
-  
-  
-  
-  
-  
-  
-  <h3 class="inherited">Methods included from <span class='object_link'><a href="Flump/Hash.html" title="Flump::Hash (module)">Hash</a></span></h3>
-  <p class="inherited"><span class='object_link'><a href="Flump/Hash.html#http_headers-instance_method" title="Flump::Hash#http_headers (method)">#http_headers</a></span>, <span class='object_link'><a href="Flump/Hash.html#sec_websocket_accept-instance_method" title="Flump::Hash#sec_websocket_accept (method)">#sec_websocket_accept</a></span>, <span class='object_link'><a href="Flump/Hash.html#websocket_upgrade%3F-instance_method" title="Flump::Hash#websocket_upgrade? (method)">#websocket_upgrade?</a></span></p>
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="Flump/IO.html" title="Flump::IO (module)">IO</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="Flump/IO.html#read_async-instance_method" title="Flump::IO#read_async (method)">#read_async</a></span>, <span class='object_link'><a href="Flump/IO.html#resume-instance_method" title="Flump::IO#resume (method)">#resume</a></span>, <span class='object_link'><a href="Flump/IO.html#wait_readable!-instance_method" title="Flump::IO#wait_readable! (method)">#wait_readable!</a></span>, <span class='object_link'><a href="Flump/IO.html#wait_writable!-instance_method" title="Flump::IO#wait_writable! (method)">#wait_writable!</a></span>, <span class='object_link'><a href="Flump/IO.html#write_async-instance_method" title="Flump::IO#write_async (method)">#write_async</a></span></p>
 
 
   <div id="class_method_details" class="method_details_list">
@@ -398,9 +287,9 @@
 
     
       <div class="method_details first">
-  <h3 class="signature first" id="call-class_method">
+  <h3 class="signature first" id="async-class_method">
   
-    .<strong>call</strong>  &#x21d2; <tt><span class='object_link'><a href="Flump/Object.html" title="Flump::Object (module)">Object</a></span></tt> 
+    .<strong>async</strong>  &#x21d2; <tt>Object</tt> 
   
 
   
@@ -412,39 +301,113 @@
       <pre class="lines">
 
 
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28</pre>
+31
+32
+33</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/flump.rb', line 14</span>
+      <pre class="code"><span class="info file"># File 'lib/flump.rb', line 31</span>
 
-<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_call'>call</span>
-  <span class='const'><span class='object_link'><a href="#READ-constant" title="Flump::READ (constant)">READ</a></span></span> <span class='op'>&lt;&lt;</span> <span class='op'>::</span><span class='const'>TCPServer</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="#HOST-constant" title="Flump::HOST (constant)">HOST</a></span></span><span class='comma'>,</span> <span class='const'><span class='object_link'><a href="#PORT-constant" title="Flump::PORT (constant)">PORT</a></span></span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_warn'>warn</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Listening at http://</span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="#HOST-constant" title="Flump::HOST (constant)">HOST</a></span></span><span class='embexpr_end'>}</span><span class='tstring_content'>:</span><span class='embexpr_beg'>#{</span><span class='const'><span class='object_link'><a href="#PORT-constant" title="Flump::PORT (constant)">PORT</a></span></span><span class='embexpr_end'>}</span><span class='tstring_content'>!</span><span class='tstring_end'>&quot;</span></span>
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_async'>async</span>
+  <span class='const'>Fiber</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span> <span class='lbrace'>{</span> <span class='kw'>yield</span> <span class='rbrace'>}</span><span class='period'>.</span><span class='id identifier rubyid_resume'>resume</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="listen_async-class_method">
+  
+    .<strong>listen_async</strong>(host, port)  &#x21d2; <tt>Object</tt> 
+  
 
-  <span class='id identifier rubyid_trap'>trap</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>INT</span><span class='tstring_end'>&#39;</span></span> <span class='kw'>do</span>
-    <span class='id identifier rubyid_warn'>warn</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>\nShutting down...\n</span><span class='tstring_end'>&quot;</span></span>
-    <span class='id identifier rubyid_exit'>exit</span>
-  <span class='kw'>end</span>
+  
 
-  <span class='lparen'>(</span><span class='const'><span class='object_link'><a href="" title="Flump (module)">Flump</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="#NUM_PROCESSES-constant" title="Flump::NUM_PROCESSES (constant)">NUM_PROCESSES</a></span></span> <span class='op'>-</span> <span class='int'>1</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_times'>times</span> <span class='kw'>do</span>
-    <span class='const'>Process</span><span class='period'>.</span><span class='id identifier rubyid_fork'>fork</span> <span class='kw'>if</span> <span class='const'>Process</span><span class='period'>.</span><span class='id identifier rubyid_pid'>pid</span> <span class='op'>==</span> <span class='const'><span class='object_link'><a href="" title="Flump (module)">Flump</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="#MASTER_PID-constant" title="Flump::MASTER_PID (constant)">MASTER_PID</a></span></span>
-  <span class='kw'>end</span>
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
 
-  <span class='id identifier rubyid_loop'>loop</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_select'>select</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="#READ-constant" title="Flump::READ (constant)">READ</a></span></span><span class='comma'>,</span> <span class='const'><span class='object_link'><a href="#WRITE-constant" title="Flump::WRITE (constant)">WRITE</a></span></span><span class='comma'>,</span> <span class='const'><span class='object_link'><a href="#ERROR-constant" title="Flump::ERROR (constant)">ERROR</a></span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_flatten'>flatten</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='symbol'>:resume</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
+
+35
+36
+37
+38
+39
+40
+41</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/flump.rb', line 35</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_listen_async'>listen_async</span><span class='lparen'>(</span><span class='id identifier rubyid_host'>host</span><span class='comma'>,</span> <span class='id identifier rubyid_port'>port</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_server'>server</span> <span class='op'>=</span> <span class='op'>::</span><span class='const'>TCPServer</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_host'>host</span><span class='comma'>,</span> <span class='id identifier rubyid_port'>port</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_server'>server</span><span class='period'>.</span><span class='id identifier rubyid_extend'>extend</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="Flump/TCPServer.html" title="Flump::TCPServer (module)">TCPServer</a></span></span><span class='rparen'>)</span>
+  <span class='const'><span class='object_link'><a href="#WAIT_READABLE-constant" title="Flump::WAIT_READABLE (constant)">WAIT_READABLE</a></span></span><span class='period'>.</span><span class='id identifier rubyid_push'>push</span><span class='lparen'>(</span><span class='id identifier rubyid_server'>server</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_warn'>warn</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Listening at http://</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_host'>host</span><span class='embexpr_end'>}</span><span class='tstring_content'>:</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_port'>port</span><span class='embexpr_end'>}</span><span class='tstring_content'>!</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_server'>server</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="route-class_method">
+  
+    .<strong>route</strong>(method, path)  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+43
+44
+45</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/flump.rb', line 43</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_route'>route</span><span class='lparen'>(</span><span class='id identifier rubyid_method'>method</span><span class='comma'>,</span> <span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
+  <span class='const'><span class='object_link'><a href="#ROUTES-constant" title="Flump::ROUTES (constant)">ROUTES</a></span></span><span class='lbracket'>[</span><span class='id identifier rubyid_method'>method</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_find'>find</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_path'>path</span> <span class='op'>=~</span> <span class='id identifier rubyid__1'>_1</span> <span class='rbrace'>}</span><span class='op'>&amp;.</span><span class='id identifier rubyid_call'>call</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="run-class_method">
+  
+    .<strong>run</strong>  &#x21d2; <tt>Object</tt> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+47
+48
+49</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/flump.rb', line 47</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_run'>run</span>
+  <span class='id identifier rubyid_loop'>loop</span> <span class='lbrace'>{</span> <span class='id identifier rubyid_select'>select</span><span class='lparen'>(</span><span class='const'><span class='object_link'><a href="#WAIT_READABLE-constant" title="Flump::WAIT_READABLE (constant)">WAIT_READABLE</a></span></span><span class='comma'>,</span> <span class='const'><span class='object_link'><a href="#WAIT_WRITABLE-constant" title="Flump::WAIT_WRITABLE (constant)">WAIT_WRITABLE</a></span></span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_flatten'>flatten</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span><span class='lparen'>(</span><span class='op'>&amp;</span><span class='symbol'>:resume</span><span class='rparen'>)</span> <span class='rbrace'>}</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -456,7 +419,7 @@
 </div>
 
       <div id="footer">
-  Generated on Mon Feb 10 15:49:30 2020 by
+  Generated on Thu Feb 13 23:24:42 2020 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.24 (ruby-2.7.0).
 </div>

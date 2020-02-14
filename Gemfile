@@ -9,7 +9,6 @@ git_source :github do
 end
 
 gem 'faker'
-gem 'pg'
 gem 'pry'
 gem 'rake'
 gem 'yard'
