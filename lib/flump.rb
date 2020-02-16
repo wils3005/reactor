@@ -2,17 +2,7 @@
 
 require 'fiber'
 require 'socket'
-
-require_relative 'flump/core_ext/binding'
-require_relative 'flump/core_ext/io'
-require_relative 'flump/core_ext/pg_connection'
 require_relative 'flump/core_ext/tcp_server'
-
-require_relative 'flump/application'
-require_relative 'flump/http_connection'
-require_relative 'flump/http_request'
-require_relative 'flump/http_response'
-require_relative 'flump/ws_connection'
 
 module Flump
   CONTENT_TYPE_HTML = 'text/html; charset=utf-8'
@@ -21,18 +11,21 @@ module Flump
   WAIT_READABLE = []
   WAIT_WRITABLE = []
 
-  def self.async
-    Fiber.new { yield }.resume
-  end
+  @host = ENV.fetch('HOST') { '127.0.0.1' }
+  @port = ENV.fetch('PORT') { '49916' }
+  @num_processes = ENV.fetch('NUM_PROCESSES') { 1 }.to_i
+  @pid = Process.pid
 
-  def self.listen_async(host, port)
-    server = ::TCPServer.new(host, port)
-    WAIT_READABLE.push(server)
-    warn("Listening at http://#{host}:#{port}!")
-    server
-  end
+  def self.call
+    ::TCPServer.new(@host, @port).wait_readable!
+    warn("Flump process #{@pid} listening at http://#{@host}:#{@port}!")
 
-  def self.run
+    trap 'INT' do
+      warn "\nShutting down...\n"
+      exit
+    end
+
+    (@num_processes - 1).times { Process.fork if Process.pid == @pid }
     loop { select(WAIT_READABLE, WAIT_WRITABLE).flatten.each(&:resume) }
   end
 end

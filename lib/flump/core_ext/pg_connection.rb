@@ -1,12 +1,20 @@
 # frozen_string_literal: true
 
 require 'pg'
+require_relative 'io'
 
 module Flump
   module PGConnection
     module ClassMethods
+      @pg_connection_config =
+        ENV.
+        fetch('PG_CONNECTION_CONFIG').
+        split(';').
+        map { |a| a.split('=') }.
+        to_h
+
       def query_async(sql)
-        new(dbname: ENV.fetch('DBNAME')).query_async(sql)
+        new(@pg_connection_config).query_async(sql)
       end
     end
 

@@ -1,5 +1,11 @@
 # frozen_string_literal: true
 
+require_relative 'application'
+require_relative 'http_request'
+require_relative 'http_response'
+require_relative 'ws_connection'
+require_relative 'core_ext/io'
+
 module Flump
   class HTTPConnection
     def self.write_read(host:, port: 80, method:, path:, **options)
@@ -27,6 +33,7 @@ module Flump
 
       @tcp_socket.close
     rescue EOFError, Errno::ECONNRESET
+      binding.stderr
       @tcp_socket.close
     end
 

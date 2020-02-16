@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'core_ext/io'
+
 module Flump
   class WSConnection
     def initialize(tcp_socket)
@@ -31,7 +33,7 @@ module Flump
         end
 
       data = @tcp_socket.read_async(payload_size).bytes
-      unmasked_data = data.each_with_index.map { _1 ^ mask[_2 % 4] }
+      unmasked_data = data.each_with_index.map { |a,b| a ^ mask[b % 4] }
       request = unmasked_data.pack('C*').force_encoding('utf-8')
       response = "user#{object_id}: #{request}"
       output = [0b10000001, response.size, response]

@@ -30,7 +30,7 @@ module Flump
       version = version.to_s.split('/').last.to_f
       status_code = status_code.to_i
       reason_phrase = reason_phrase.to_s
-      headers = status_line_and_headers.map { _1.split(': ') }.to_h
+      headers = status_line_and_headers.map { |s| s.split(': ') }.to_h
       return if status_code < 100
 
       new(
@@ -64,7 +64,7 @@ module Flump
       headers =
         _default_headers.
         merge(@headers).
-        map { "#{_1}: #{_2}" }.
+        map { |k, v| "#{k}: #{v}" }.
         join("\r\n")
 
       "HTTP/#{@version} #{@status_code} #{@reason_phrase}\r\n" \
@@ -76,7 +76,8 @@ module Flump
     def _default_headers
       {
         'Server' => 'Flump',
-        'Date' => Time.now.utc.strftime('%a, %d %b %Y %H:%M:%S GMT')
+        'Date' => Time.now.utc.strftime('%a, %d %b %Y %H:%M:%S GMT'),
+        'Connection' => 'close'
       }
     end
   end

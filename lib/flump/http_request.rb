@@ -2,16 +2,16 @@
 
 module Flump
   class HTTPRequest
-    def self.parse(str)
-      request_line_and_headers, body = str.split("\r\n\r\n")
+    def self.parse(raw_request)
+      request_line_and_headers, body = raw_request.split("\r\n\r\n")
       request_line_and_headers = request_line_and_headers.split("\r\n")
       body = body.to_s
       method, path, version = request_line_and_headers.shift.split
-      headers = request_line_and_headers.map { _1.split(': ') }.to_h
+      headers = request_line_and_headers.map { |a| a.split(': ') }.to_h
       method = method.to_s
       path, query = path.to_s.split('?')
       version = version.to_s.split('/').last.to_f
-      query = query.to_s.split('&').map { _1.split('=') }.to_h
+      query = query.to_s.split('&').map { |a| a.split('=') }.to_h
       return if method.empty? || path.empty? || version < 1.0 || !headers.key?('Host')
 
       new(
@@ -51,7 +51,7 @@ module Flump
       headers =
         _default_headers.
         merge(@headers).
-        map { "#{_1}: #{_2}" }.
+        map { |a,b| "#{a}: #{b}" }.
         join("\r\n")
 
       "#{@method} #{@path} HTTP/#{@version}\r\n" \

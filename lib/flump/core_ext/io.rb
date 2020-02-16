@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'fiber'
+require_relative 'binding'
 
 module Flump
   module IO

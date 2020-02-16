@@ -9,9 +9,30 @@ task :build do
   system 'gem build flump.gemspec'
 end
 
+desc 'Deploy'
+task :deploy do
+  system 'git fetch'
+  system 'git reset --hard origin/master'
+  system 'rake'
+  system 'chown -R flump:flump /home/flump/'
+  system 'systemctl stop flump.service'
+  system 'rm /var/run/flump/flump.sock*'
+  system 'systemctl start flump.service'
+  system 'systemctl status flump.service'
+end
+
 desc "Install gem"
 task :install do
   system 'gem install flump-0.1.0.gem'
+end
+
+desc 'Start'
+task :start do
+  flump_path = ENV.fetch 'FLUMP_PATH' do
+    '/Users/jack/.gem/ruby/2.7.0/gems/flump-0.1.0/lib/flump.rb'
+  end
+
+  system "ruby --enable frozen_string_literal --disable gems -r #{flump_path} -e 'Flump.call'"
 end
 
 namespace :db do
