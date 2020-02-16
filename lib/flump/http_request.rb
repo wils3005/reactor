@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'core_ext/binding'
+
 module Flump
   class HTTPRequest
     def self.parse(raw_request)
@@ -23,6 +25,8 @@ module Flump
         headers: headers,
         body: body
       )
+    rescue => error
+      binding.stderr
     end
 
     attr_reader :host,

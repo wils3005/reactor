@@ -6,7 +6,8 @@ task default: ['build', 'install']
 
 desc "Build gem"
 task :build do
-  system 'gem build flump.gemspec'
+  cmd = 'gem build flump.gemspec'
+  system(Process.setproctitle(cmd))
 end
 
 desc 'Deploy'
@@ -18,12 +19,12 @@ task :deploy do
   system 'systemctl stop flump.service'
   system 'rm /var/run/flump/flump.sock*'
   system 'systemctl start flump.service'
-  system 'systemctl status flump.service'
 end
 
 desc "Install gem"
 task :install do
-  system 'gem install flump-0.1.0.gem'
+  cmd = 'gem install flump-0.1.0.gem'
+  system(Process.setproctitle(cmd))
 end
 
 desc 'Start'
@@ -32,18 +33,21 @@ task :start do
     '/Users/jack/.gem/ruby/2.7.0/gems/flump-0.1.0/lib/flump.rb'
   end
 
-  system "ruby --enable frozen_string_literal --disable gems -r #{flump_path} -e 'Flump.call'"
+  cmd = "ruby --enable frozen_string_literal --disable gems -r #{flump_path} -e 'Flump.call'"
+  system(Process.setproctitle(cmd))
 end
 
 namespace :db do
   desc "Create user"
   task :createuser do
-    system 'createuser flump'
+    cmd = 'createuser flump'
+    system(Process.setproctitle(cmd))
   end
 
   desc "Create database"
   task :createdb do
-    system 'createdb flump --owner=flump'
+    cmd = 'createdb flump --owner=flump'
+    system(Process.setproctitle(cmd))
   end
 
   desc "Create UUID extension"
@@ -95,7 +99,7 @@ namespace :db do
         Faker::Address.full_address.tr("'", '')
       ]
 
-      str = arr.map { "'#{_1}'" }.join(', ')
+      str = arr.map { |a| "'#{a}'" }.join(', ')
       "(#{str})"
     end
 
