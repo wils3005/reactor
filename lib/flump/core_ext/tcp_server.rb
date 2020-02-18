@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 require 'fiber'
-require_relative '../http_connection'
+require_relative '../http/client'
 
 module Flump
   module TCPServer
     def resume
-      Fiber.new { HTTPConnection.new(accept_nonblock).read_write }.resume
+      Fiber.new { HTTP::Client.new(accept_nonblock).call }.resume
     rescue ::IO::EAGAINWaitReadable
     end
 

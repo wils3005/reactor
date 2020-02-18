@@ -29,12 +29,10 @@ end
 
 desc 'Start'
 task :start do
-  flump_path = ENV.fetch 'FLUMP_PATH' do
-    '/Users/jack/.gem/ruby/2.7.0/gems/flump-0.1.0/lib/flump.rb'
-  end
+  require_relative 'lib/flump'
 
-  cmd = "ruby --enable frozen_string_literal --disable gems -r #{flump_path} -e 'Flump.call'"
-  system(Process.setproctitle(cmd))
+  Process.setproctitle('flump')
+  Flump.call
 end
 
 namespace :db do
