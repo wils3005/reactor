@@ -6,7 +6,7 @@ files = Dir.glob(pattern).map { _1[%r{(?<=#{Dir.pwd}/).+}] }
 Gem::Specification.new do
   _1.name        = 'flump'
   _1.version     = '0.1.0'
-  _1.date        = '2020-02-13'
+  _1.date        = '2020-02-19'
   _1.author      = ['Jack Wilson']
   _1.email       = ['wils3005@gmail.com']
   _1.summary     = 'A lightweight framework for building network applications in ruby'

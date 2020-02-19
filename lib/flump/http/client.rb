@@ -15,13 +15,12 @@ module Flump
       def call
         raw_request = @tcp_socket.read_async
         request = Request.parse(raw_request)
-        response = Exchange.new(request).response
+        response = Exchange.call(request)
         @tcp_socket.write_async(response)
         return WS::Client.new(@tcp_socket).call if response.status_code == 101
 
         @tcp_socket.close
-      rescue EOFError, Errno::ECONNRESET => error
-        binding.stderr
+      rescue EOFError, Errno::ECONNRESET
         @tcp_socket.close
       end
     end

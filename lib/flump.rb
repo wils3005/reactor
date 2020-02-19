@@ -2,6 +2,7 @@
 
 require 'fiber'
 require 'socket'
+require_relative 'flump/dsl'
 require_relative 'flump/core_ext/tcp_server'
 
 module Flump
@@ -11,21 +12,21 @@ module Flump
   WAIT_READABLE = []
   WAIT_WRITABLE = []
 
-  @host = ENV.fetch('HOST') { '127.0.0.1' }
-  @port = ENV.fetch('PORT') { '49916' }
-  @num_processes = ENV.fetch('NUM_PROCESSES') { 1 }.to_i
-  @pid = Process.pid
+  HOST = ENV.fetch('HOST') { '127.0.0.1' }
+  PORT = ENV.fetch('PORT') { '49916' }
+  NUM_PROCESSES = ENV.fetch('NUM_PROCESSES') { 1 }.to_i
+  MASTER_PID = Process.pid
 
   def self.call
-    ::TCPServer.new(@host, @port).wait_readable!
-    warn("Flump process #{@pid} listening at http://#{@host}:#{@port}!")
+    ::TCPServer.new(HOST, PORT).wait_readable!
+    warn("Flump process #{MASTER_PID} listening at http://#{HOST}:#{PORT}!")
 
     trap 'INT' do
       warn "\nShutting down...\n"
       exit
     end
 
-    (@num_processes - 1).times { Process.fork if Process.pid == @pid }
+    (NUM_PROCESSES - 1).times { Process.fork if Process.pid == MASTER_PID }
     loop { select(WAIT_READABLE, WAIT_WRITABLE).flatten.each(&:resume) }
   end
 end

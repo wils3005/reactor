@@ -1,14 +1,16 @@
 # flump
 
-It's flump, it's flump, it's flump, it's in my head.
+A lightweight framework for building network applications in ruby.
 
-1. cp .env.sample .env
-2. bundle install
-3. rake build
-4. rake install
-5. rake db:createuser
-6. rake db:createdb
-7. rake db:create_uuid_extension
-8. rake db:create_users_table
-9. rake db:insert_users
-10. flump (or pry)
+```ruby
+# my_flump.rb
+
+require 'flump'
+
+Flump::HTTP::Exchange.new('GET', '/') do |request|
+  { status_code: 200 }
+end
+
+Flump.call
+
+```

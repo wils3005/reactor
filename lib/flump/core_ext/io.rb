@@ -1,14 +1,11 @@
 # frozen_string_literal: true
 
 require 'fiber'
-require_relative 'binding'
 
 module Flump
   module IO
     def resume
       @fiber.resume
-    rescue => error
-      binding.stderr
     end
 
     def read_async(int = 16_384)

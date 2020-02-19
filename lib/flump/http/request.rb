@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative '../core_ext/binding'
-
 module Flump
   module HTTP
     class Request
