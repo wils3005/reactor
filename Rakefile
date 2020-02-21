@@ -6,33 +6,20 @@ task default: ['build', 'install']
 
 desc "Build gem"
 task :build do
-  cmd = 'gem build flump.gemspec'
-  system(Process.setproctitle(cmd))
+  system 'gem build flump.gemspec'
 end
 
 desc 'Deploy'
 task :deploy do
   system 'git fetch'
   system 'git reset --hard origin/master'
-  system 'rake'
-  system 'chown -R flump:flump /home/flump/'
-  system 'systemctl stop flump.service'
-  system 'rm /var/run/flump/flump.sock*'
-  system 'systemctl start flump.service'
+  Rake::Task['build'].invoke
+  Rake::Task['install'].invoke
 end
 
 desc "Install gem"
 task :install do
-  cmd = 'gem install flump-0.1.0.gem'
-  system(Process.setproctitle(cmd))
-end
-
-desc 'Start'
-task :start do
-  require_relative 'lib/flump'
-
-  Process.setproctitle('flump')
-  Flump.call
+  system 'gem install flump-0.1.0.gem'
 end
 
 namespace :db do
