@@ -8,6 +8,8 @@ git_source :github do |it|
   "https://github.com/#{it}"
 end
 
+gem 'activerecord'
+gem 'activerecord-rack'
 gem 'faker'
 gem 'pry'
 gem 'rack'

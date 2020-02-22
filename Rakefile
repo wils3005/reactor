@@ -2,37 +2,44 @@
 
 require 'yard'
 
-task default: ['build', 'install']
+task :default do
+  system 'rake -T'
+end
+
+desc "Start app"
+task :start do
+  system 'env $(xargs < .env) rackup'
+end
 
 desc "Build gem"
 task :build do
   system 'gem build flump.gemspec'
 end
 
+desc "Install gem"
+task :install do
+  Rake::Task['build'].invoke
+  system 'gem install flump-0.1.0.gem'
+end
+
 desc 'Deploy'
 task :deploy do
   system 'git fetch'
   system 'git reset --hard origin/master'
-  Rake::Task['build'].invoke
   Rake::Task['install'].invoke
-end
-
-desc "Install gem"
-task :install do
-  system 'gem install flump-0.1.0.gem'
+  system 'chown -R flump:flump /home/flump'
+  system 'systemctl restart flump.service'
 end
 
 namespace :db do
   desc "Create user"
   task :createuser do
-    cmd = 'createuser flump'
-    system(Process.setproctitle(cmd))
+    system 'createuser flump'
   end
 
   desc "Create database"
   task :createdb do
-    cmd = 'createdb flump --owner=flump'
-    system(Process.setproctitle(cmd))
+    system 'createdb flump --owner=flump'
   end
 
   desc "Create UUID extension"

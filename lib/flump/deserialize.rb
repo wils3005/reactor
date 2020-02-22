@@ -3,8 +3,8 @@
 require 'puma/null_io'
 
 module Flump
-  module RequestDeserializer
-    def self.call(raw_request)
+  module Deserialize
+    def deserialize(raw_request)
       env = {}
 
       request_line_and_headers, body = raw_request.split("\r\n\r\n")
@@ -22,8 +22,8 @@ module Flump
       request_path, query_string = path_with_query.to_s.split('?')
 
       env['SCRIPT_NAME'] = ''
-      env['SERVER_NAME'] = HOST
-      env['SERVER_PORT'] = PORT
+      env['SERVER_NAME'] = Flump.host
+      env['SERVER_PORT'] = Flump.port
       env['REQUEST_METHOD'] = request_method
       env['REQUEST_PATH'] = request_path
       env['PATH_INFO'] = request_path
