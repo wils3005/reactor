@@ -3,12 +3,10 @@
 require 'fiber'
 require 'socket'
 
-require_relative 'flump/pg_connection'
+require_relative 'flump/api'
 require_relative 'flump/io'
 require_relative 'flump/server'
 require_relative 'flump/socket'
-
-require_relative 'flump/user'
 
 module Flump
   @host = ENV.fetch('HOST')

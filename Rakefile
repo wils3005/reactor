@@ -6,9 +6,14 @@ task :default do
   system 'rake -T'
 end
 
-desc "Start app"
-task :start do
-  system 'env $(xargs < .env) rackup'
+desc "Start a console"
+task :console do
+  system 'env $(xargs < .env) bundle exec pry'
+end
+
+desc "Start the server"
+task :server do
+  system 'env $(xargs < .env) bundle exec rackup'
 end
 
 desc "Build gem"
