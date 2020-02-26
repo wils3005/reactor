@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'flump'
+
+Flump.host = ENV.fetch('HOST')
+Flump.port = ENV.fetch('PORT')
+Flump.pg_connection_pool_size = ENV.fetch('PG_CONNECTION_POOL_SIZE').to_i
+Flump.process_pool_size = ENV.fetch('PROCESS_POOL_SIZE').to_i
+Flump.app = Flump::API.new
+Flump.call

@@ -3,8 +3,12 @@
 module Flump
   module Server
     def resume
-      Fiber.new { accept_nonblock.read_write_async }.resume
-    rescue ::IO::EAGAINWaitReadable
+      ::Fiber.new do
+        io = accept_nonblock
+        ::Fiber.current.io = io
+        io.read_write_async
+      end.resume
+    rescue ::IO::WaitReadable
     end
 
     TCPServer.include(self)

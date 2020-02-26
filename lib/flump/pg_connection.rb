@@ -4,11 +4,12 @@ require 'pg'
 
 module Flump
   module PGConnection
-    def query_async(sql)
+    def query(sql)
       send_query(sql)
-      socket_io.wait_readable unless socket_io.ready?
-      query_async = get_result
-      query_async
+      socket_io.wait_readable
+      result = get_result
+      finish
+      result
     end
 
     ::PG::Connection.include(self)

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'grape'
-require_relative 'pg_connection'
 
 module Flump
   class API < Grape::API
@@ -17,7 +16,7 @@ module Flump
 
     resource :users do
       get do
-        Flump.pg_pool.select { _1.transaction_status.zero? }.sample.query_async(SQL).to_a
+        Flump.query(SQL).to_a
       end
     end
   end

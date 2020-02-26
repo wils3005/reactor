@@ -6,32 +6,24 @@ task :default do
   system 'rake -T'
 end
 
-desc "Start a console"
-task :console do
-  system 'env $(xargs < .env) bundle exec pry'
-end
+namespace :gem do
+  desc "Build"
+  task :build do
+    system 'gem build flump.gemspec'
+  end
 
-desc "Start the server"
-task :server do
-  system 'env $(xargs < .env) bundle exec rackup'
-end
-
-desc "Build gem"
-task :build do
-  system 'gem build flump.gemspec'
-end
-
-desc "Install gem"
-task :install do
-  Rake::Task['build'].invoke
-  system 'gem install flump-0.1.0.gem'
+  desc "Install"
+  task :install do
+    Rake::Task['gem:build'].invoke
+    system 'gem install flump-0.1.0.gem'
+  end
 end
 
 desc 'Deploy'
 task :deploy do
   system 'git fetch'
   system 'git reset --hard origin/master'
-  Rake::Task['install'].invoke
+  Rake::Task['gem:install'].invoke
   system 'chown -R flump:flump /home/flump'
   system 'systemctl restart flump.service'
 end

@@ -4,34 +4,32 @@ require 'fiber'
 require 'socket'
 
 require_relative 'flump/api'
+require_relative 'flump/fiber'
 require_relative 'flump/io'
+require_relative 'flump/pg_connection'
 require_relative 'flump/server'
 require_relative 'flump/socket'
 
 module Flump
-  @host = ENV.fetch('HOST')
-  @port = ENV.fetch('PORT')
   @pid = Process.pid
-  @pg_connections = ENV.fetch('PG_CONNECTIONS').to_i
-  @num_processes = ENV.fetch('NUM_PROCESSES') { 1 }.to_i
   @wait_readable = []
   @wait_writable = []
 
   class << self
     attr_accessor :app,
                   :host,
-                  :pg_pool,
+                  :pg_connection_pool_size,
                   :port,
-                  :pid,
-                  :num_processes
+                  :process_pool_size
 
-    attr_reader :wait_readable,
-                :wait_writable,
-                :pg_pool
+    attr_reader :pg_connection_pool,
+                :pid,
+                :wait_readable,
+                :wait_writable
 
     def call
       @wait_readable << TCPServer.new(@host, @port)
-      @pg_pool = Array.new(@pg_connections) { PG::Connection.new(dbname: 'flump') }
+      # @pg_connection_pool = PGConnectionPool.new(pg_connection_pool_size)
 
       warn("Flump listening at http://#{@host}:#{@port}!")
 
@@ -40,8 +38,18 @@ module Flump
         exit
       end
 
-      (@num_processes - 1).times { Process.fork if Process.pid == @pid }
-      loop { select(@wait_readable, @wait_writable).flatten.each(&:resume) }
+      (process_pool_size - 1).times { Process.fork if Process.pid == @pid }
+
+      loop do
+        select(@wait_readable, @wait_writable).flatten.each(&:resume)
+      end
+    end
+
+    def query(sql)
+      PG::Connection.new(dbname: 'flump', port: 5432).query(sql).to_a
+    rescue PG::ConnectionBad
+      ::Fiber.current.io.wait_writable
+      retry
     end
   end
 end
