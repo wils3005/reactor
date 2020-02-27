@@ -8,10 +8,9 @@ module Flump
     include Deserialize
     include Serialize
 
-    WEBSOCKET_MAGIC_UUID = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
-
     def read_write_async
-      env = deserialize(read_async)
+      raw_request = read_async
+      env = deserialize(raw_request)
       response_params = Flump.app.call(env)
       raw_response = serialize(*response_params)
       write_async(raw_response)
@@ -20,10 +19,12 @@ module Flump
       close
     end
 
-    ::TCPSocket.include(self)
-    ::UNIXSocket.include(self)
+    TCPSocket.include(self)
+    UNIXSocket.include(self)
   end
 end
+
+#     WEBSOCKET_MAGIC_UUID = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
 
 # ALLOWED_METHODS = [
 #   'DELETE',

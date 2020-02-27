@@ -49,13 +49,10 @@ GEM
       ruby2_keywords (~> 0.0.1)
     mustermann-grape (1.0.1)
       mustermann (>= 1.0.0)
-    nio4r (2.5.2)
     pg (1.2.2)
     pry (0.12.2)
       coderay (~> 1.1)
       method_source (~> 0.9.0)
-    puma (4.3.1)
-      nio4r (~> 2.0)
     rack (2.2.2)
     rack-accept (0.4.5)
       rack (>= 0.4)
@@ -75,7 +72,6 @@ DEPENDENCIES
   grape
   pg
   pry
-  puma
   rack
   rake
   yard
