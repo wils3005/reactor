@@ -1,20 +1,18 @@
 # frozen_string_literal: true
 
-pattern = File.join(Dir.pwd, '**', '*.rb')
-
-files =
-  Dir.
-  glob(pattern).
-  map { |it| it[%r{(?<=#{Dir.pwd}/).+}] }.
-  push('bin/flump')
+require_relative 'lib/flump'
 
 Gem::Specification.new do |it|
-  it.name        = 'flump'
-  it.version     = '0.1.0'
-  it.date        = '2020-02-25'
-  it.author      = ['Jack Wilson']
-  it.email       = ['wils3005@gmail.com']
-  it.summary     = 'A lightweight framework for building network applications in ruby'
+  it.name                  = 'flump'
+  it.version               = Flump::VERSION
+  it.date                  = '2020-03-02'
+  it.author                = ['Jack Wilson']
+  it.email                 = ['wils3005@gmail.com']
+  it.summary               = 'A lightweight framework for building network applications in ruby'
+  it.homepage              = 'https://github.com/wils3005/flump'
+  it.license               = 'ISC'
+  it.required_ruby_version = '>= 2.4.5'
+
   it.description = <<~HEREDOC
     Incidunt alias reprehenderit. Nemo commodi et. Inventore soluta alias.
     Maiores aut nihil. Ullam consequatur qui. Dolores quas consectetur. Sint
@@ -22,9 +20,7 @@ Gem::Specification.new do |it|
     perspiciatis laudantium.
   HEREDOC
 
-  it.homepage              = 'https://github.com/wils3005/flump'
-  it.license               = 'ISC'
-  it.required_ruby_version = '>= 2.4.5'
-  it.files                 = files
-  it.executables           << 'flump'
+  it.files = Dir.
+             glob(File.join(Dir.pwd, '**', '*.rb')).
+             map { |it| it[%r{(?<=#{Dir.pwd}/).+}] }
 end

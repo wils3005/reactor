@@ -1,39 +1,36 @@
 # frozen_string_literal: true
 
+require 'fiber'
+
 module Flump
   module IO
+    MAXLEN = 16_384
+
     def resume
       @fiber.resume
     end
 
-    def read_async(int = 16_384)
-      read_nonblock(int)
+    def read_async(int = MAXLEN)
+      chunk = read_nonblock(int)
+      return chunk if chunk.length < MAXLEN
+
+      chunk += read_async
     rescue ::IO::WaitReadable
-      wait_readable
+      Flump.wait_readable.push(self)
+      @fiber = Fiber.current
+      Fiber.yield
+      Flump.wait_readable.delete(self)
       retry
     end
 
     def write_async(str)
       write_nonblock(str)
     rescue ::IO::WaitWritable
-      wait_writable
+      Flump.wait_writable(self)
+      @fiber = Fiber.current
+      Fiber.yield
+      Flump.wait_writable.delete(self)
       retry
     end
-
-    def wait_readable
-      Flump.wait_readable.push(self)
-      @fiber = ::Fiber.current
-      ::Fiber.yield
-      Flump.wait_readable.delete(self)
-    end
-
-    def wait_writable
-      Flump.wait_writable.push(self)
-      @fiber = ::Fiber.current
-      ::Fiber.yield
-      Flump.wait_writable.delete(self)
-    end
-
-    ::IO.include(self)
   end
 end

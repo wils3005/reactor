@@ -6,9 +6,8 @@ require 'flump'
 module Rack
   module Handler
     module Flump
-      def self.run(app)
-        ::Flump.app = app
-        ::Flump.call
+      def self.run(app, **options)
+        ::Flump.call(app, **options)
       end
     end
 

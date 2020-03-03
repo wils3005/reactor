@@ -1,18 +1,12 @@
 # frozen_string_literal: true
 
-require 'fiber'
 require 'socket'
-
-require 'active_record'
-require 'grape'
-
-require_relative 'flump/api'
+require_relative 'flump/http'
 require_relative 'flump/io'
-require_relative 'flump/server'
-require_relative 'flump/socket'
-require_relative 'flump/user'
 
 module Flump
+  ::IO.include(IO)
+
   VERSION = '0.1.0'
 
   @pid = Process.pid
@@ -20,28 +14,30 @@ module Flump
   @wait_writable = []
 
   class << self
-    attr_accessor :app,
-                  :host,
-                  :port,
-                  :process_pool_size,
-                  :active_record_connection_params
-
-    attr_reader :pid,
+    attr_reader :app,
+                :host,
+                :port,
+                :tcp_server,
+                :http_server,
                 :wait_readable,
                 :wait_writable
 
-    def call
-      ActiveRecord::Base.establish_connection(@active_record_connection_params)
-      @wait_readable << TCPServer.new(@host, @port)
-      warn("Flump #{@pid} listening at http://#{@host}:#{@port}!")
+    def call(app, **options)
+      @app = app
+      @host = options[:host] || ENV.fetch('HOST') { 'localhost' }
+      @port = options[:port] || ENV.fetch('PORT') { 65432 }
+      @tcp_server = TCPServer.new(@host, @port)
+      @http_server = Flump::HTTP::Server.new(@tcp_server)
+      warn "#{@pid}/flump listening at http://#{@host}:#{@port}!"
 
       trap 'INT' do
         warn "\nShutting down...\n"
         exit
       end
 
-      (@process_pool_size - 1).times { Process.fork if Process.pid == @pid }
-      loop { select(@wait_readable, @wait_writable).flatten.each(&:resume) }
+      loop do
+        select(@wait_readable, @wait_writable).flatten.each(&:resume)
+      end
     end
   end
 end
