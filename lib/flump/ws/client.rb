@@ -33,12 +33,13 @@ module Flump
 
         data = @socket.read_async(payload_size).bytes
         unmasked_data = data.each_with_index.map { |a,b| a ^ mask[b % 4] }
-        request = unmasked_data.pack('C*').force_encoding('utf-8')
+        request_payload = unmasked_data.pack('C*').force_encoding('utf-8')
 
-        # application websocket logic here
-        response = "user#{object_id}: #{request}"
-        output = [0b10000001, response.size, response]
-        packed_response = output.pack("CCA#{response.size}")
+        # application websocket logic here :(
+
+        response_payload = "user#{object_id}: #{request_payload}"
+        output = [0b10000001, response_payload.size, response_payload]
+        packed_response = output.pack("CCA#{response_payload.size}")
         @socket.write_async(packed_response)
 
         call

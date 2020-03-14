@@ -2,6 +2,7 @@
 
 require 'digest/sha1'
 require 'socket'
+require_relative 'flump/application'
 require_relative 'flump/http'
 require_relative 'flump/ws'
 require_relative 'flump/io'

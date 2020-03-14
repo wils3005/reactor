@@ -6,8 +6,8 @@ module Flump
   module HTTP
     # https://www.rubydoc.info/github/rack/rack/file/SPEC
     module RequestDeserializer
-      def self.call(raw_request)
-        request_line_and_headers, body = raw_request.split("\r\n\r\n")
+      def self.call(socket)
+        request_line_and_headers, body = socket.read_async.split("\r\n\r\n")
         request_line_and_headers = request_line_and_headers.split("\r\n")
 
         request_method, path_with_query, http_version =

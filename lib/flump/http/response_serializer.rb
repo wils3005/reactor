@@ -77,7 +77,7 @@ module Flump
         511 => 'Network Authentication Required'
       }.freeze
 
-      def self.call(status_code, headers, rack_body)
+      def self.call(socket, status_code, headers, rack_body)
         reason_phrase = REASON_PHRASES[status_code]
 
         headers =
@@ -89,17 +89,19 @@ module Flump
         body = ''
         rack_body.each { |it| body += it }
 
-        "HTTP/1.1 #{status_code} #{reason_phrase}\r\n" \
-        "#{headers}\r\n" \
-        "\r\n" \
-        "#{body}"
+        raw_response =
+          "HTTP/1.1 #{status_code} #{reason_phrase}\r\n" \
+          "#{headers}\r\n" \
+          "\r\n" \
+          "#{body}"
+
+        socket.write_async(raw_response)
       end
 
       def self.default_headers
         {
           'Server' => HTTP_SERVER,
-          'Date' => Time.now.utc.strftime(HTTP_DATE),
-          'Connection' => 'close'
+          'Date' => Time.now.utc.strftime(HTTP_DATE)
         }
       end
     end
