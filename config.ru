@@ -2,17 +2,8 @@
 
 require 'rack/handler/flump'
 
-app = Flump::Application.new
-
-app.body = format(
-  File.read('index.html'),
-  title: 'flump!',
-  host: ENV.fetch('HOST'),
-  port: ENV.fetch('PORT')
-)
-
 Rack::Handler::Flump.run(
-  app,
+  Flump::Application.new,
   host: ENV.fetch('HOST'),
   port: ENV.fetch('PORT')
 )

@@ -3,20 +3,29 @@
 module Flump
   module WS
     class Client
-      def initialize(socket)
-        @socket = socket
+      @all = []
+
+      class << self
+        attr_reader :all
       end
 
-      def call
+      def initialize(socket)
+        @socket = socket
+        @ip_address = @socket.remote_address.ip_address
+        self.class.all << self
+        warn(inspect)
+      end
+
+      def read
         first_byte, second_byte, *mask = @socket.read_async(6).bytes
         fin = first_byte & 0b10000000
-        return @socket.close unless fin
+        return close unless fin
 
         opcode = first_byte & 0b00001111
-        return @socket.close if opcode == 8
+        return close if opcode == 8
 
         is_masked = second_byte & 0b10000000
-        return @socket.close unless is_masked
+        return close unless is_masked
 
         payload_size = second_byte & 0b01111111
 
@@ -28,21 +37,30 @@ module Flump
           elsif payload_size == 127
             @socket.read_async(8).unpack('Q>').first
           else
-            @socket.close
+            return close
           end
 
         data = @socket.read_async(payload_size).bytes
         unmasked_data = data.each_with_index.map { |a,b| a ^ mask[b % 4] }
         request_payload = unmasked_data.pack('C*').force_encoding('utf-8')
-
-        # application websocket logic here :(
-
         response_payload = "user#{object_id}: #{request_payload}"
-        output = [0b10000001, response_payload.size, response_payload]
-        packed_response = output.pack("CCA#{response_payload.size}")
-        @socket.write_async(packed_response)
+        warn("#{inspect} #{request_payload.inspect}")
+        self.class.all.each { |it| it.write(response_payload) }
+        read
+      end
 
-        call
+      def write(str)
+        packed = [0b10000001, str.size, str].pack("CCA#{str.size}")
+        @socket.write_async(packed)
+      rescue IOError
+        close
+      end
+
+      private
+
+      def close
+        self.class.all.delete(self)
+        @socket.close
       end
     end
   end

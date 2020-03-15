@@ -5,9 +5,11 @@ module Flump
     class Client
       def initialize(socket)
         @socket = socket
+        @ip_address = @socket.remote_address.ip_address
+        warn(inspect)
       end
 
-      def call
+      def read_write
         env = RequestDeserializer.call(@socket)
         status_code, response_headers, response_body = Flump.app.call(env)
 
@@ -20,11 +22,11 @@ module Flump
 
         case response_headers['Connection']
         when 'close' then @socket.close
-        when 'upgrade' then WS::Client.new(@socket).call
+        when 'upgrade' then WS::Client.new(@socket).read
         else @socket.close
         end
-      rescue EOFError, Errno::ECONNRESET => e
-        warn("#{__FILE__} #{__method__} #{e.inspect}")
+      rescue EOFError, Errno::ECONNRESET => @error
+        warn(inspect)
         @socket.close
       end
     end

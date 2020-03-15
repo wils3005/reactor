@@ -4,9 +4,9 @@ module Flump
   class Application
     WEBSOCKET_MAGIC_UUID = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
 
-    attr_accessor :body
-
-    def initialize; end
+    def initialize
+      @index = File.read('index.html')
+    end
 
     def call(env)
       if env['HTTP_CONNECTION'] =~ /upgrade/i && env['HTTP_UPGRADE'] == 'websocket'
@@ -26,9 +26,22 @@ module Flump
         return [101, headers, []]
       end
 
-      [200, { 'Connection' => 'close' }, [@body]]
-    rescue => e
-      warn("#{__FILE__} #{__method__} #{e.inspect}")
+      websocket_url =
+        if env['flump.ip_address'] =~ /192\.168\.0\.\d+/
+          'ws://192.168.0.2:49916'
+        else
+          'ws://wils.ca:49916'
+        end
+
+      body = format(
+        @index,
+        title: 'flump!',
+        websocket_url: websocket_url
+      )
+
+      [200, { 'Connection' => 'close' }, [body]]
+    rescue => @error
+      warn(inspect)
       [500, {}, []]
     end
 
