@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'digest/bubblebabble'
+
 module Flump
   module WS
     class Client
@@ -12,7 +14,16 @@ module Flump
       def initialize(socket)
         @socket = socket
         @ip_address = @socket.remote_address.ip_address
-        self.class.all << self
+
+        @pseudonym =
+          Digest
+          .bubblebabble(@ip_address)
+          .split('-')
+          .sample
+          .capitalize
+
+        @clients = self.class.all
+        @clients << self
         warn(inspect)
       end
 
@@ -40,26 +51,35 @@ module Flump
             return close
           end
 
-        data = @socket.read_async(payload_size).bytes
-        unmasked_data = data.each_with_index.map { |a,b| a ^ mask[b % 4] }
-        request_payload = unmasked_data.pack('C*').force_encoding('utf-8')
-        response_payload = "user#{object_id}: #{request_payload}"
-        warn("#{inspect} #{request_payload.inspect}")
-        self.class.all.each { |it| it.write(response_payload) }
+        unmasked_data =
+          @socket
+          .read_async(payload_size)
+          .bytes
+          .each_with_index
+          .map { |a,b| a ^ mask[b % 4] }
+
+        @message = unmasked_data.pack('C*').force_encoding('utf-8')
+        str = "#{@pseudonym}: #{@message}"
+        warn(inspect)
+        @clients.each { |it| it.write(str) }
         read
+      rescue => @error
+        warn(inspect)
+        close
       end
 
       def write(str)
         packed = [0b10000001, str.size, str].pack("CCA#{str.size}")
         @socket.write_async(packed)
-      rescue IOError
+      rescue => @error
+        warn(inspect)
         close
       end
 
       private
 
       def close
-        self.class.all.delete(self)
+        @clients.delete(self)
         @socket.close
       end
     end

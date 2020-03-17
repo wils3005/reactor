@@ -27,15 +27,15 @@ module Flump
       end
 
       websocket_url =
-        if env['flump.ip_address'] =~ /192\.168\.0\.\d+/
-          'ws://192.168.0.2:49916'
+        if env['HTTP_X-FORWARDED-FOR'] =~ /192\.168\.0\.\d+/
+          'ws://192.168.0.2/flump'
         else
-          'ws://wils.ca:49916'
+          'wss://wils.ca/flump'
         end
 
       body = format(
         @index,
-        title: 'flump!',
+        title: '#flump',
         websocket_url: websocket_url
       )
 

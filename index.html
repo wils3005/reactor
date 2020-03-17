@@ -36,12 +36,11 @@
       window.onload = () => {
         const webSocket = new WebSocket("%<websocket_url>s");
 
-        webSocket.onopen = () => console.log('connected');
-        webSocket.onclose = () => console.error('disconnected');
-        webSocket.onerror = error => console.error('failed to connect', error);
+        webSocket.onopen = () => console.log('#flump connected');
+        webSocket.onclose = () => console.error('#flump disconnected');
+        webSocket.onerror = error => console.error('#flump failed to connect', error);
 
         webSocket.onmessage = event => {
-          console.log('received', event.data);
           const messageElement = document.createElement('div');
           messageElement.className = 'message';
           messageElement.innerText = event.data;
@@ -64,7 +63,7 @@
 <body>
   <div class="chat"></div>
   <form>
-    <input class="chat-input" autofocus required>
+    <input class="chat-input" placeholder="Message #flump" autofocus required>
   </form>
 </body>
 

@@ -30,8 +30,7 @@ module Flump
           'rack.multithread' => false,
           'rack.multiprocess' => false,
           'rack.run_once' => false,
-          'rack.url_scheme' => 'http',
-          'flump.ip_address' => socket.remote_address.ip_address
+          'rack.url_scheme' => 'http'
         }
 
         headers = request_line_and_headers.each do |str|
