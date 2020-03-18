@@ -5,7 +5,6 @@ module Flump
     class Client
       def initialize(socket)
         @socket = socket
-        @ip_address = @socket.remote_address.ip_address
         warn(inspect)
       end
 
@@ -22,7 +21,7 @@ module Flump
 
         case response_headers['Connection']
         when 'close' then @socket.close
-        when 'upgrade' then WS::Client.new(@socket).read
+        when 'upgrade' then WS::Connection.new(@socket).read
         else @socket.close
         end
       rescue EOFError, Errno::ECONNRESET => @error

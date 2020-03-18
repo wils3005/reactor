@@ -4,7 +4,7 @@ require 'digest/bubblebabble'
 
 module Flump
   module WS
-    class Client
+    class Connection
       @all = []
 
       class << self
@@ -13,11 +13,10 @@ module Flump
 
       def initialize(socket)
         @socket = socket
-        @ip_address = @socket.remote_address.ip_address
 
         @pseudonym =
           Digest
-          .bubblebabble(@ip_address)
+          .bubblebabble(inspect)
           .split('-')
           .sample
           .capitalize
