@@ -7,7 +7,7 @@ module Flump
     class Server
       module Resume
         def resume
-          Fiber.new { Client.new(accept_nonblock).read_write }.resume
+          Fiber.new { Client.new(accept_nonblock).call }.resume
         rescue ::IO::WaitReadable
         end
       end
