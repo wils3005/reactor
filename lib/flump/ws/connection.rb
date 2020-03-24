@@ -21,8 +21,7 @@ module Flump
           .sample
           .capitalize
 
-        @clients = self.class.all
-        @clients << self
+        Connection.all << self
         warn(inspect)
       end
 
@@ -60,7 +59,7 @@ module Flump
         @message = unmasked_data.pack('C*').force_encoding('utf-8')
         str = "#{@pseudonym}: #{@message}"
         warn(inspect)
-        @clients.each { |it| it.write(str) }
+        Connection.all.each { |it| it.write(str) }
         read
       rescue => @error
         warn(inspect)
@@ -78,7 +77,7 @@ module Flump
       private
 
       def close
-        @clients.delete(self)
+        Connection.all.delete(self)
         @socket.close
       end
     end
