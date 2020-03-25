@@ -9,6 +9,8 @@ module Flump
     end
 
     def call(env)
+      return [200, { 'Connection' => 'close' }, ['']] if env['REQUEST_PATH'] =~ /siege/
+
       if env['HTTP_CONNECTION'] =~ /upgrade/i && env['HTTP_UPGRADE'] == 'websocket'
         ws_key = env.fetch('HTTP_SEC-WEBSOCKET-KEY') do
           return [400, {}, []]
