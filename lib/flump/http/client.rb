@@ -123,7 +123,13 @@ module Flump
           end
         end
 
-        status_code, response_headers, response_body = Flump.app.call(env)
+        status_code, response_headers, response_body = 
+          if env['REQUEST_PATH'] == '/siege'
+            [200, { 'Connection' => 'close' }, ['']]
+          else
+            Flump.app.call(env)
+          end
+
         reason_phrase = REASON_PHRASES[status_code]
 
         default_headers = {
@@ -131,25 +137,25 @@ module Flump
           'Date' => Time.now.utc.strftime(HTTP_DATE)
         }
 
-        response_headers =
+        raw_response_headers =
           default_headers.
           merge(response_headers).
           map { |k, v| "#{k}: #{v}" }.
           join("\r\n")
 
-        body = ''
-        response_body.each { |it| body += it }
+        raw_response_body = ''
+        response_body.each { |it| raw_response_body += it }
 
         raw_response =
           "HTTP/1.1 #{status_code} #{reason_phrase}\r\n" \
-          "#{response_headers}\r\n" \
+          "#{raw_response_headers}\r\n" \
           "\r\n" \
-          "#{response_body}"
+          "#{raw_response_body}"
 
         @socket.write_async(raw_response)
 
         case response_headers['Connection']
-        when 'close' then @socket.close
+        # when 'keep-alive' then call
         when 'upgrade' then WS::Connection.new(@socket).read
         else @socket.close
         end

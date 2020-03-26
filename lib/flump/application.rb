@@ -6,11 +6,10 @@ module Flump
 
     def initialize
       @index = File.read('index.html')
+      warn(inspect)
     end
 
     def call(env)
-      return [200, { 'Connection' => 'close' }, ['']] if env['REQUEST_PATH'] =~ /siege/
-
       if env['HTTP_CONNECTION'] =~ /upgrade/i && env['HTTP_UPGRADE'] == 'websocket'
         ws_key = env.fetch('HTTP_SEC-WEBSOCKET-KEY') do
           return [400, {}, []]
@@ -29,8 +28,8 @@ module Flump
       end
 
       websocket_url =
-        if env['HTTP_X-FORWARDED-FOR'] =~ /192\.168\.0\.\d+/
-          'ws://192.168.0.2/flump'
+        if env['SERVER_NAME'] =~ /192\.168\.0\.\d+/ || env['HTTP_X-FORWARDED-FOR'] =~ /192\.168\.0\.\d+/
+          "ws://#{Flump.host}:#{Flump.port}/flump"
         else
           'wss://wils.ca/flump'
         end
@@ -46,40 +45,5 @@ module Flump
       warn(inspect)
       [500, {}, []]
     end
-
-    private
-
-    # def _response_params
-      # if _bad_request? then [400, {}, []]
-      # elsif _http_version_not_supported? then [505, {}, []]
-      # elsif _method_not_allowed? then [405, {}, []]
-      # elsif _switching_protocols? then _switching_protocols
-      # else [404, {}, []]
-      # end
-    # rescue => error
-    #   [500, {}, []]
-    # end
-
-    ############################################################################
-
-    # def _bad_request?
-    #   env['REQUEST_METHOD'].empty? ||
-    #     @request.path.empty? ||
-    #     @request.version < 1.0 ||
-    #     !@request.headers.key?('Host')
-    # end
-
-    # def _http_version_not_supported?
-    #   @request.version >= 2.0
-    # end
-
-    # def _method_not_allowed?
-    #   !ALLOWED_METHODS.include?(@request.method)
-    # end
-
-    # def _switching_protocols?
-    #   @env['HTTP_CONNECTION'] == 'Upgrade' &&
-    #     @env['HTTP_UPGRADE'] == 'websocket'
-    # end
   end
 end

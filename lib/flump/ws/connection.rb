@@ -58,7 +58,6 @@ module Flump
 
         @message = unmasked_data.pack('C*').force_encoding('utf-8')
         str = "#{@pseudonym}: #{@message}"
-        warn(inspect)
         Connection.all.each { |it| it.write(str) }
         read
       rescue => @error
