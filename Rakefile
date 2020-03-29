@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'yard'
 require_relative 'lib/flump'
 
 task :default do
@@ -26,5 +25,3 @@ task :deploy do
   system 'chown -R flump:flump /home/flump'
   system 'systemctl restart flump.service'
 end
-
-YARD::Rake::YardocTask.new

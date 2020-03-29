@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'fiber'
+require 'socket'
 
 module Flump
   module IO
@@ -16,21 +17,25 @@ module Flump
 
       chunk += read_async
     rescue ::IO::WaitReadable
-      Flump.wait_readable.push(self)
-      @fiber = Fiber.current
-      Fiber.yield
-      Flump.wait_readable.delete(self)
+      Flump::Selector.wait_readable(self) do
+        @fiber = Fiber.current
+        Fiber.yield
+      end
+
       retry
     end
 
     def write_async(str)
       write_nonblock(str)
     rescue ::IO::WaitWritable
-      Flump.wait_writable(self)
-      @fiber = Fiber.current
-      Fiber.yield
-      Flump.wait_writable.delete(self)
+      Flump::Selector.wait_writable(self) do
+        @fiber = Fiber.current
+        Fiber.yield
+      end
+
       retry
     end
+
+    ::IO.include(self)
   end
 end

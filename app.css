@@ -1,0 +1,30 @@
+* {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: black;
+  display: flex;
+  flex-flow: column;
+  height: 100vh;
+}
+
+#chat {
+  color: green;
+  flex: 1 1 auto;
+  font-family: "Courier New";
+  font-size: 16pt;
+  overflow-y: scroll;
+  width: 100vw;
+}
+
+#chat-input {
+  background: black;
+  color: green;
+  flex: 1 1 auto;
+  font-family: "Courier New";
+  font-size: 16pt;
+  width: 100vw;
+}

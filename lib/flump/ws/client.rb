@@ -4,7 +4,7 @@ require 'digest/bubblebabble'
 
 module Flump
   module WS
-    class Connection
+    class Client
       @all = []
 
       class << self
@@ -14,20 +14,23 @@ module Flump
       def initialize(socket)
         @socket = socket
 
-        @pseudonym =
+        @user_name =
           Digest
           .bubblebabble(inspect)
           .split('-')
           .sample
           .capitalize
 
-        Connection.all << self
+        message = "#{@user_name} joined #flump"
+        WS::Client.all.each { |it| it.write(message) }
+        WS::Client.all << self
         warn(inspect)
       end
 
       def read
         first_byte, second_byte, *mask = @socket.read_async(6).bytes
         fin = first_byte & 0b10000000
+        puts(fin: fin)
         return close unless fin
 
         opcode = first_byte & 0b00001111
@@ -56,9 +59,9 @@ module Flump
           .each_with_index
           .map { |a,b| a ^ mask[b % 4] }
 
-        @message = unmasked_data.pack('C*').force_encoding('utf-8')
-        str = "#{@pseudonym}: #{@message}"
-        Connection.all.each { |it| it.write(str) }
+        message = unmasked_data.pack('C*').force_encoding('utf-8')
+        str = "#{@user_name}: #{message}"
+        WS::Client.all.each { |it| it.write(str) }
         read
       rescue => @error
         warn(inspect)
@@ -73,10 +76,10 @@ module Flump
         close
       end
 
-      private
-
       def close
-        Connection.all.delete(self)
+        WS::Client.all.delete(self)
+        message = "#{@user_name} left #flump"
+        WS::Client.all.each { |it| it.write(message) }
         @socket.close
       end
     end

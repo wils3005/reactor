@@ -15,7 +15,7 @@ module Flump
       def initialize(server)
         @server = server
         @server.extend(Resume)
-        Flump.wait_readable << @server
+        Flump::Selector.wait_readable(@server)
       end
     end
   end

@@ -9,10 +9,6 @@ git_source :github do |it|
 end
 
 gem 'faker'
-gem 'grape'
-gem 'pg'
 gem 'pry'
 gem 'rack'
 gem 'rake'
-gem 'ruby-kafka'
-gem 'yard'

@@ -86,7 +86,7 @@ module Flump
 
       # https://www.rubydoc.info/github/rack/rack/file/SPEC
       def call
-        request_line_and_headers, body = @socket.read_async.split("\r\n\r\n")
+        request_line_and_headers, content = @socket.read_async.split("\r\n\r\n")
         request_line_and_headers = request_line_and_headers.split("\r\n")
 
         request_method, path_with_query, http_version =
@@ -103,7 +103,7 @@ module Flump
           'SERVER_PORT' => Flump.port,
           'HTTP_VERSION' => http_version,
           'REQUEST_PATH' => request_path,
-          'rack.input' => StringIO.new(body.to_s),
+          'rack.input' => StringIO.new(content.to_s),
           'rack.version' => [1, 3],
           'rack.errors' => STDERR,
           'rack.multithread' => false,
@@ -123,7 +123,7 @@ module Flump
           end
         end
 
-        status_code, response_headers, response_body = 
+        status_code, response_headers, response_content = 
           if env['REQUEST_PATH'] == '/siege'
             [200, { 'Connection' => 'close' }, ['']]
           else
@@ -143,20 +143,20 @@ module Flump
           map { |k, v| "#{k}: #{v}" }.
           join("\r\n")
 
-        raw_response_body = ''
-        response_body.each { |it| raw_response_body += it }
+        raw_response_content = ''
+        response_content.each { |it| raw_response_content += it }
 
         raw_response =
           "HTTP/1.1 #{status_code} #{reason_phrase}\r\n" \
           "#{raw_response_headers}\r\n" \
           "\r\n" \
-          "#{raw_response_body}"
+          "#{raw_response_content}"
 
         @socket.write_async(raw_response)
 
         case response_headers['Connection']
         # when 'keep-alive' then call
-        when 'upgrade' then WS::Connection.new(@socket).read
+        when 'upgrade' then WS::Client.new(@socket).read
         else @socket.close
         end
       rescue EOFError, Errno::ECONNRESET => @error
