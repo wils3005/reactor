@@ -11,8 +11,6 @@ module Flump
           select(@wait_readable, @wait_writable).flatten.each(&:resume)
         end
       end
-
-      self
     end
 
     def self.wait_readable(io)
@@ -22,8 +20,6 @@ module Flump
         yield
         @wait_readable.delete(io)
       end
-
-      self
     end
 
     def self.wait_writable(io)
@@ -33,8 +29,6 @@ module Flump
         yield
         @wait_writable.delete(io)
       end
-      
-      self
     end
   end
 end

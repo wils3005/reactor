@@ -20,11 +20,16 @@ module Flump
     @app = app
     @host = options[:host] || ENV.fetch('HOST') { 'localhost' }
     @port = options[:port] || ENV.fetch('PORT') { 65432 }
-    tcp_server = TCPServer.new(@host, @port)
-    HTTP::Server.new(tcp_server)
+    @sock = options[:sock] || ENV.fetch('SOCK') { '/home/flump/tmp/flump.sock' }
+    FileUtils.rm(@sock) if File.exists?(@sock)
+    server = TCPServer.new(@host, @port)
+    # server = UNIXServer.new(@sock)
+    # FileUtils.chmod('ugo=rw', @sock)
+    HTTP::Server.new(server)
     Selector.run
 
-    warn "#{@pid}/flump listening at http://#{@host}:#{@port}!"
+    # warn "#{@pid}/flump listening at http://#{@host}:#{@port}!"
+    warn "#{@pid}/flump listening at unix:#{@sock}!"
 
     trap 'INT' do
       warn "\nShutting down...\n"

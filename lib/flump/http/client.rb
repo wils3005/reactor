@@ -81,7 +81,6 @@ module Flump
 
       def initialize(socket)
         @socket = socket
-        warn(inspect)
       end
 
       # https://www.rubydoc.info/github/rack/rack/file/SPEC
@@ -124,7 +123,7 @@ module Flump
         end
 
         status_code, response_headers, response_content = 
-          if env['REQUEST_PATH'] == '/siege'
+          if env['REQUEST_PATH'] =~ /siege/
             [200, { 'Connection' => 'close' }, ['']]
           else
             Flump.app.call(env)

@@ -33,12 +33,6 @@ module Flump
       return [101, ws_headers, []] if ws_upgrade
 
       internal = (env['HTTP_X-FORWARDED-FOR'] || env['SERVER_NAME']) =~ INTERNAL
-
-      # ws_url =
-      #   internal ?
-      #   "wss://#{Flump.host}:#{Flump.port}/flump" :
-      #   'wss://wils.ca/flump'
-
       js = @js.result_with_hash(ws_url: 'wss://wils.ca/flump')
       content = @html.result_with_hash(title: '#flump', css: @css, js: js)
       [200, { 'Connection' => 'close' }, [content]]

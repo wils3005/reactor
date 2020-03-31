@@ -24,13 +24,12 @@ module Flump
         message = "#{@user_name} joined #flump"
         WS::Client.all.each { |it| it.write(message) }
         WS::Client.all << self
-        warn(inspect)
       end
 
       def read
         first_byte, second_byte, *mask = @socket.read_async(6).bytes
         fin = first_byte & 0b10000000
-        puts(fin: fin)
+
         return close unless fin
 
         opcode = first_byte & 0b00001111
