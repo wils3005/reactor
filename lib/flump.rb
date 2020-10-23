@@ -1,41 +1,38 @@
 # frozen_string_literal: true
 
+require 'logger'
 require 'socket'
-require_relative 'flump/application'
-require_relative 'flump/http'
 require_relative 'flump/io'
-require_relative 'flump/selector'
-require_relative 'flump/ws'
+require_relative 'flump/tcp_server'
+require_relative 'flump/tcp_socket'
 
 module Flump
   VERSION = '0.1.0'
 
-  @pid = Process.pid
+  @logger = Logger.new(STDOUT)
+  @wait_readable = []
+  @wait_writable = []
 
   class << self
-    attr_reader :app, :host, :port
-  end
+    attr_reader :logger, :wait_readable, :wait_writable
 
-  def self.call(app, **options)
-    @app = app
-    @host = options[:host] || ENV.fetch('HOST') { 'localhost' }
-    @port = options[:port] || ENV.fetch('PORT') { 65432 }
-    @sock = options[:sock] || ENV.fetch('SOCK') { '/home/flump/tmp/flump.sock' }
-    FileUtils.rm(@sock) if File.exists?(@sock)
-    server = TCPServer.new(@host, @port)
-    # server = UNIXServer.new(@sock)
-    # FileUtils.chmod('ugo=rw', @sock)
-    HTTP::Server.new(server)
-    Selector.run
+    def call
+      @pid = Process.pid
+      @host = ENV.fetch('HOST', 'localhost')
+      @port = ENV.fetch('PORT', 65_432)
+      @wait_readable << TCPServer.new(@host, @port)
+      @logger.info("#{@pid}/flump listening at http://#{@host}:#{@port}!")
+      trap('INT', &method(:shutdown))
+      loop(&method(:resume))
+    end
 
-    # warn "#{@pid}/flump listening at http://#{@host}:#{@port}!"
-    warn "#{@pid}/flump listening at unix:#{@sock}!"
+    def resume
+      select(@wait_readable, @wait_writable).flatten.each(&:resume)
+    end
 
-    trap 'INT' do
+    def shutdown(*)
       warn "\nShutting down...\n"
       exit
     end
-
-    sleep
   end
 end

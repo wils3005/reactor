@@ -3,39 +3,35 @@
 require 'fiber'
 require 'socket'
 
-module Flump
-  module IO
-    MAXLEN = 16_384
+class IO
+  MAXLEN = 16_384
 
-    def resume
-      @fiber.resume
-    end
+  def resume
+    @fiber.resume
+  end
 
-    def read_async(int = MAXLEN)
-      chunk = read_nonblock(int)
-      return chunk if chunk.length < MAXLEN
+  def read_async(int = MAXLEN)
+    chunk = read_nonblock(int)
+    return chunk if chunk.length < MAXLEN
 
-      chunk += read_async
-    rescue ::IO::WaitReadable
-      Flump::Selector.wait_readable(self) do
-        @fiber = Fiber.current
-        Fiber.yield
-      end
+    chunk += read_async
+  rescue ::IO::WaitReadable
+    Flump.wait_readable << self
+    @fiber = Fiber.current
+    Fiber.yield
+    Flump.wait_readable.delete(self)
 
-      retry
-    end
+    retry
+  end
 
-    def write_async(str)
-      write_nonblock(str)
-    rescue ::IO::WaitWritable
-      Flump::Selector.wait_writable(self) do
-        @fiber = Fiber.current
-        Fiber.yield
-      end
+  def write_async(str)
+    write_nonblock(str)
+  rescue ::IO::WaitWritable
+    Flump.wait_writable << self
+    @fiber = Fiber.current
+    Fiber.yield
+    Flump.wait_writable.delete(self)
 
-      retry
-    end
-
-    ::IO.include(self)
+    retry
   end
 end

@@ -17,11 +17,7 @@ task :install do
   system "gem install flump-#{Flump::VERSION}.gem"
 end
 
-desc 'Deploy'
-task :deploy do
-  system 'git fetch'
-  system 'git reset --hard origin/master'
-  Rake::Task['install'].invoke
-  system 'chown -R flump:flump /home/flump'
-  system 'systemctl restart flump.service'
+desc 'Run'
+task :run do
+  Flump.call
 end
