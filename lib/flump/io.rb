@@ -1,3 +1,4 @@
+# typed: true
 # frozen_string_literal: true
 
 require 'fiber'
@@ -20,7 +21,6 @@ class IO
     @fiber = Fiber.current
     Fiber.yield
     Flump.wait_readable.delete(self)
-
     retry
   end
 
@@ -31,7 +31,6 @@ class IO
     @fiber = Fiber.current
     Fiber.yield
     Flump.wait_writable.delete(self)
-
     retry
   end
 end

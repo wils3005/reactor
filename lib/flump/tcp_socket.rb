@@ -1,3 +1,4 @@
+# typed: true
 # frozen_string_literal: true
 
 class TCPSocket
@@ -7,8 +8,8 @@ class TCPSocket
     @res = Marshal.dump(eval(@req))
     Flump.logger.info(@res)
     write_async(@res)
-  rescue EOFError, Errno::ECONNRESET => @err
-    Flump.logger.warn(inspect)
+  rescue EOFError, Errno::ECONNRESET => e
+    Flump.logger.warn(e)
     close
   end
 end
