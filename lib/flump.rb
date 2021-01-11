@@ -1,8 +1,7 @@
-# typed: false
 # frozen_string_literal: true
 
-require 'logger'
 require 'socket'
+require_relative 'flump/http'
 require_relative 'flump/io'
 require_relative 'flump/tcp_server'
 require_relative 'flump/tcp_socket'
@@ -17,7 +16,9 @@ module Flump
   class << self
     attr_reader :logger, :wait_readable, :wait_writable
 
-    def call
+    def call(app, **options)
+      @app = app
+      @options = options
       @pid = Process.pid
       @host = ENV.fetch('HOST', 'localhost')
       @port = ENV.fetch('PORT', '65432')

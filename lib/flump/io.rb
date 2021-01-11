@@ -16,7 +16,7 @@ class IO
 
     chunk += read_async
   rescue ::IO::WaitReadable
-    Flump.wait_readable << self
+    Flump.wait_readable.push(self)
     @fiber = Fiber.current
     Fiber.yield
     Flump.wait_readable.delete(self)
@@ -26,7 +26,7 @@ class IO
   def write_async(str)
     write_nonblock(str)
   rescue ::IO::WaitWritable
-    Flump.wait_writable << self
+    Flump.wait_writable.push(self)
     @fiber = Fiber.current
     Fiber.yield
     Flump.wait_writable.delete(self)
