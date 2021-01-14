@@ -1,40 +1,36 @@
 # frozen_string_literal: true
 
+require 'logger'
 require 'socket'
-require_relative 'flump/http'
+require_relative 'flump/exchange'
 require_relative 'flump/io'
 require_relative 'flump/tcp_server'
-require_relative 'flump/tcp_socket'
 
 module Flump
   VERSION = '0.1.0'
 
   @logger = Logger.new($stdout)
-  @wait_readable = []
-  @wait_writable = []
 
   class << self
-    attr_reader :logger, :wait_readable, :wait_writable
+    attr_reader :app, :host, :logger, :options, :port
 
     def call(app, **options)
       @app = app
       @options = options
-      @pid = Process.pid
       @host = ENV.fetch('HOST', 'localhost')
       @port = ENV.fetch('PORT', '65432')
-      @wait_readable << TCPServer.new(@host, @port)
-      @logger.info("#{@pid}/flump listening at http://#{@host}:#{@port}!")
-      trap('INT', &method(:shutdown))
-      loop(&method(:resume))
-    end
+      @server = TCPServer.new(@host, @port)
+      @exchange = Flump::Exchange.new(@app)
+      @server.exchange = @exchange
+      IO.wait_readable.push(@server)
+      @logger.info("flump listening at http://#{@host}:#{@port}!")
 
-    def resume
-      select(@wait_readable, @wait_writable).flatten.each(&:resume)
-    end
+      trap 'INT' do
+        warn "\nShutting down...\n"
+        exit
+      end
 
-    def shutdown(*)
-      warn "\nShutting down...\n"
-      exit
+      loop(&IO.method(:resume))
     end
   end
 end
