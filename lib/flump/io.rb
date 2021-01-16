@@ -25,10 +25,10 @@ class IO
   end
 
   def read_async(int = @@maxlen)
-    chunk = read_nonblock(int)
-    return chunk if chunk.length < @@maxlen
+    buffer = read_nonblock(int)
+    return buffer if buffer.length < @@maxlen
 
-    chunk += read_async
+    buffer += read_async(int)
   rescue ::IO::WaitReadable
     @@wait_readable.push(self)
     @fiber = Fiber.current
@@ -41,12 +41,12 @@ class IO
     write_async(yield read_async)
     close
   rescue EOFError, Errno::ECONNRESET => e
-    Flump.logger.warn(e)
     close
+    raise e
   end
 
-  def write_async(str)
-    write_nonblock(str)
+  def write_async(buffer)
+    write_nonblock(buffer)
   rescue ::IO::WaitWritable
     @@wait_writable.push(self)
     @fiber = Fiber.current
@@ -55,10 +55,11 @@ class IO
     retry
   end
 
-  def write_read_async(str)
-    read_async(yield write_async(str))
-  rescue EOFError, Errno::ECONNRESET => e
-    Flump.logger.warn(e)
+  def write_read_async(buffer)
+    read_async(yield write_async(buffer))
     close
+  rescue EOFError, Errno::ECONNRESET => e
+    close
+    raise e
   end
 end

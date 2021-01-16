@@ -1,7 +1,7 @@
 ---
 concurrency: 4
-base: "http://localhost:9292"
-iterations: 15000
+base: "http://optiplex:80"
+iterations: 10000
 rampup: 5
 
 plan:
