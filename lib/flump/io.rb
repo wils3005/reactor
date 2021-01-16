@@ -8,14 +8,6 @@ class IO
   @@wait_readable = []
   @@wait_writable = []
 
-  def self.wait_readable
-    @@wait_readable
-  end
-
-  def self.wait_writable
-    @@wait_writable
-  end
-
   def self.resume
     select(@@wait_readable, @@wait_writable).flatten.each(&:resume)
   end
@@ -30,10 +22,7 @@ class IO
 
     buffer += read_async(int)
   rescue ::IO::WaitReadable
-    @@wait_readable.push(self)
-    @fiber = Fiber.current
-    Fiber.yield
-    @@wait_readable.delete(self)
+    wait_readable
     retry
   end
 
@@ -48,10 +37,7 @@ class IO
   def write_async(buffer)
     write_nonblock(buffer)
   rescue ::IO::WaitWritable
-    @@wait_writable.push(self)
-    @fiber = Fiber.current
-    Fiber.yield
-    @@wait_writable.delete(self)
+    wait_writable
     retry
   end
 
@@ -61,5 +47,19 @@ class IO
   rescue EOFError, Errno::ECONNRESET => e
     close
     raise e
+  end
+
+  def wait_readable
+    @@wait_readable.push(self)
+    @fiber = Fiber.current
+    Fiber.yield
+    @@wait_readable.delete(self)
+  end
+
+  def wait_writable
+    @@wait_writable.push(self)
+    @fiber = Fiber.current
+    Fiber.yield
+    @@wait_writable.delete(self)
   end
 end

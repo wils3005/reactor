@@ -2,13 +2,11 @@
 
 source 'https://rubygems.org'
 
-ruby '>= 2.5.5'
+ruby '~> 3.0'
 
-git_source :github do |it|
-  "https://github.com/#{it}"
+git_source :github do
+  "https://github.com/#{_1}"
 end
 
-gem 'faker'
-gem 'pry'
 gem 'rack'
 gem 'rake'

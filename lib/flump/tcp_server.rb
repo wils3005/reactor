@@ -11,4 +11,8 @@ class TCPServer
   rescue ::IO::WaitReadable
     nil
   end
+
+  def wait_readable
+    @@wait_readable.push(self)
+  end
 end

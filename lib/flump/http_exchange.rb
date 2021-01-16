@@ -78,9 +78,10 @@ module Flump
       511 => 'Network Authentication Required'
     }.freeze
 
-    def initialize(host, port)
+    def initialize(host, port, errors = $stderr)
       @host = host
       @port = port
+      @errors = errors
     end
 
     # https://www.rubydoc.info/github/rack/rack/file/SPEC
@@ -104,15 +105,15 @@ module Flump
         'REQUEST_PATH' => request_path,
         'rack.input' => StringIO.new(content.to_s),
         'rack.version' => [1, 3],
-        'rack.errors' => $stderr,
+        'rack.errors' => @errors,
         'rack.multithread' => false,
         'rack.multiprocess' => false,
         'rack.run_once' => false,
         'rack.url_scheme' => 'http'
       }
 
-      request_line_and_headers.each do |str|
-        key, value = str.split(': ')
+      request_line_and_headers.each do
+        key, value = _1.split(': ')
 
         case key.upcase!
         when 'CONTENT-TYPE', 'CONTENT-LENGTH'
@@ -138,7 +139,7 @@ module Flump
         .join("\r\n")
 
       raw_response_content = ''
-      response_content.each { |it| raw_response_content += it }
+      response_content.each { raw_response_content += _1 }
 
       "HTTP/1.1 #{status_code} #{reason_phrase}\r\n" \
         "#{raw_response_headers}\r\n" \
