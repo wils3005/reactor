@@ -3,7 +3,7 @@
 require 'stringio'
 
 module Flump
-  class Exchange
+  class HTTPExchange
     HTTP_DATE = '%a, %d %b %Y %H:%M:%S GMT'
     HTTP_SERVER = 'Flump'
 
@@ -78,8 +78,9 @@ module Flump
       511 => 'Network Authentication Required'
     }.freeze
 
-    def initialize(app)
-      @app = app
+    def initialize(host, port)
+      @host = host
+      @port = port
     end
 
     # https://www.rubydoc.info/github/rack/rack/file/SPEC
@@ -97,8 +98,8 @@ module Flump
         'SCRIPT_NAME' => '',
         'PATH_INFO' => request_path,
         'QUERY_STRING' => query_string.to_s,
-        'SERVER_NAME' => Flump.host,
-        'SERVER_PORT' => Flump.port,
+        'SERVER_NAME' => @host,
+        'SERVER_PORT' => @port,
         'HTTP_VERSION' => http_version,
         'REQUEST_PATH' => request_path,
         'rack.input' => StringIO.new(content.to_s),
@@ -121,10 +122,7 @@ module Flump
         end
       end
 
-      ##########################################################################
-      status_code, response_headers, response_content = @app.call(env)
-
-      ##########################################################################
+      status_code, response_headers, response_content = yield env
       reason_phrase = REASON_PHRASES[status_code]
 
       default_headers = {
@@ -146,17 +144,6 @@ module Flump
         "#{raw_response_headers}\r\n" \
         "\r\n" \
         "#{raw_response_content}"
-
-      #   @socket.write_async(raw_response)
-
-      #   case response_headers['Connection']
-      #   # when 'keep-alive' then call
-      #   when 'upgrade' then WS::Client.new(@socket).read
-      #   else @socket.close
-      #   end
-      # rescue EOFError, Errno::ECONNRESET => e
-      #   warn(e)
-      #   @socket.close
     end
   end
 end

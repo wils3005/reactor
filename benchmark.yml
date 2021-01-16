@@ -1,0 +1,10 @@
+---
+concurrency: 4
+base: "http://localhost:9292"
+iterations: 15000
+rampup: 5
+
+plan:
+  - name: /
+    request:
+      url: /

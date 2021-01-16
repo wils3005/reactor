@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
+require 'pry'
 require 'logger'
 require 'socket'
-require_relative 'flump/exchange'
+require_relative 'flump/http_exchange'
 require_relative 'flump/io'
 require_relative 'flump/tcp_server'
 
@@ -12,16 +13,22 @@ module Flump
   @logger = Logger.new($stdout)
 
   class << self
-    attr_reader :app, :host, :logger, :options, :port
+    attr_reader :app, :logger, :options
 
     def call(app, **options)
       @app = app
       @options = options
       @host = ENV.fetch('HOST', 'localhost')
-      @port = ENV.fetch('PORT', '65432')
+      @port = ENV.fetch('PORT', '9292')
       @server = TCPServer.new(@host, @port)
-      @exchange = Flump::Exchange.new(@app)
-      @server.exchange = @exchange
+      @exchange = HTTPExchange.new(@host, @port)
+
+      @server.block = lambda do |raw_request|
+        @exchange.call(raw_request) do |env|
+          @app.call(env)
+        end
+      end
+
       IO.wait_readable.push(@server)
       @logger.info("flump listening at http://#{@host}:#{@port}!")
 

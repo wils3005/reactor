@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'rack/handler'
-require_relative '../../flump'
 
 module Rack
   module Handler
